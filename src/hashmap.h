@@ -2,5 +2,4 @@
 #define _lcthw_hashmap_h
 
 
-
 #endif

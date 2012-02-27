@@ -1,0 +1,3 @@
+* Make tst_traverse abort if too deep.
+* Have these be in a lcthw/*.h setup and that is installed.
+* Change the ifdef defenders to start with lcthw_*

@@ -28,15 +28,19 @@ void list_clear_destroy(list_t *list);
 
 typedef int (*list_traverse_cb)(list_node_t *node, void *data);
 
-int list_traverse(list_t *list, list_traverse_cb cb);
+int list_traverse(list_t *list, list_traverse_cb cb, void *data);
 
-void list_push(list_t *list);
+void list_push(list_t *list, void *value);
 void *list_pop(list_t *list);
 
-void list_shift(list_t *list);
+void list_shift(list_t *list, void *value);
 void *list_unshift(list_t *list);
 
-list_t *list_join(list_t *left, list_t *right);
-list_t *list_search(list_t *left, void *data, list_traverse_cb cb);
+void *list_remove(list_t *list, list_node_t *node);
+void *list_search(list_t *list, list_traverse_cb cb, void *data);
+
+#define LIST_FOREACH(L, S, M, V) list_node_t *_node = NULL;\
+    list_node_t *V = NULL;\
+    for(V = _node = L->S; _node != NULL; V = _node = _node->M)
 
 #endif

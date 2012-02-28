@@ -116,13 +116,6 @@ char *test_remove()
 }
 
 
-char *test_traverse_search()
-{
-
-
-    return NULL;
-}
-
 char *all_tests() {
     mu_suite_start();
 
@@ -130,7 +123,6 @@ char *all_tests() {
     mu_run_test(test_push_pop);
     mu_run_test(test_shift_unshift);
     mu_run_test(test_remove);
-    mu_run_test(test_traverse_search);
 
     return NULL;
 }

@@ -33,19 +33,6 @@ void list_clear_destroy(list_t *list)
 }
 
 
-int list_traverse(list_t *list, list_traverse_cb cb, void *data)
-{
-    LIST_FOREACH(list, first, next, cur) {
-        int rc = cb(cur, data);
-
-        if(rc != 0) {
-            return rc;
-        }
-    }
-
-    return 0;
-}
-
 void list_push(list_t *list, void *value)
 {
     list_node_t *node = calloc(1, sizeof(list_node_t));
@@ -129,18 +116,6 @@ void *list_remove(list_t *list, list_node_t *node)
 
 error:
     return result;
-}
-
-
-void *list_search(list_t *list, list_traverse_cb cb, void *data)
-{
-    LIST_FOREACH(list, first, next, cur) {
-        if(cb(cur, data)) {
-            return cur->value;
-        }
-    }
-
-    return NULL;
 }
 
 

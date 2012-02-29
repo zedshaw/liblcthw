@@ -74,4 +74,6 @@ error:
 
 #define darray_free(E) free((E))
 
+#define DARRAY_FOREACH(D, V) 
+
 #endif

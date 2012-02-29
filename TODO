@@ -4,3 +4,10 @@
 * Change the radixmap to a generic "intmap" and have radix and heap sorts plugabble as callbacks.
 * Add the RadixMap_sort_tail from Mongrel2 to study as an exercise.
 * Need to do some kind of namespacing on the data types because stack_t exists already, probably others.
+
+src/bstrlib.h
+src/btree.h
+src/hashmap.h
+src/ringbuffer.h
+src/sarray.h
+

@@ -11,9 +11,12 @@ list_t *list_create()
 void list_destroy(list_t *list)
 {
     LIST_FOREACH(list, first, next, cur) {
-        free(cur);
+        if(cur->prev) {
+            free(cur->prev);
+        }
     }
 
+    free(list->last);
     free(list);
 }
 

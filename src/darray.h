@@ -34,7 +34,7 @@ void darray_clear_destroy(darray_t *array);
 #define darray_count(A) darray_end(A)
 #define darray_max(A) ((A)->max)
 
-#define DEFAULT_EXPAND_RATE 300
+#define DEFAULT_NUMBER_OF_BUCKETS 300
 
 
 static inline void darray_set(darray_t *array, int i, void *el)
@@ -73,7 +73,5 @@ error:
 }
 
 #define darray_free(E) free((E))
-
-#define DARRAY_FOREACH(D, V) 
 
 #endif

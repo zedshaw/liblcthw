@@ -4,8 +4,12 @@
 * Change the radixmap to a generic "intmap" and have radix and heap sorts plugabble as callbacks.
 * Add the RadixMap_sort_tail from Mongrel2 to study as an exercise.
 * Need to do some kind of namespacing on the data types because stack_t exists already, probably others.
+* RadixMap should take and return pointers, not plain integers as values. Integers are barely useful in the book.
+* Need some sort algorithms for the darray, it's kind of useless without them, and it would make radix and heaps easier to do.
+* Look up whatever tail recursion is available in GCC or others.
 
 src/bstrlib.h
 src/btree.h
 src/ringbuffer.h
 src/sarray.h
+

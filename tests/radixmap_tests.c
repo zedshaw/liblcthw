@@ -7,7 +7,7 @@ static int make_random(RadixMap *map)
     size_t i = 0;
 
     for (i = 0; i < map->max - 1; i++) {
-        uint32_t key = (uint32_t)(rand () | (rand () << 16));
+        uint32_t key = (uint32_t)(rand() | (rand() << 16));
         check(RadixMap_add(map, key, i) == 0, "Failed to add key %u.", key);
     }
 

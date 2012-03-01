@@ -57,12 +57,27 @@ error:
     return NULL;
 }
 
+
 void hashmap_destroy(hashmap_t *map)
 {
+    int i = 0;
+    int j = 0;
+
+    // TODO: pack up this double-for-loop pattern into a macro somehow
     if(map) {
         if(map->buckets) {
+            for(i = 0; i < darray_count(map->buckets); i++) {
+                darray_t *bucket = darray_get(map->buckets, i);
+                if(bucket) {
+                    for(j = 0; j < darray_count(bucket); j++) {
+                        free(darray_get(bucket, j));
+                    }
+                    darray_destroy(bucket);
+                }
+            }
             darray_destroy(map->buckets);
         }
+
         free(map);
     }
 }
@@ -152,7 +167,7 @@ int hashmap_traverse(hashmap_t *map, hashmap_traverse_cb traverse_cb) {
         if(bucket) {
             for(j = 0; j < darray_count(bucket); j++) {
                 hashmap_node_t *node = darray_get(bucket, j);
-                rc = traverse_cb(node->key, node->data);
+                rc = traverse_cb(node);
                 if(rc != 0) return rc;
             }
         }

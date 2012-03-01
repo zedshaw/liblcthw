@@ -8,7 +8,6 @@
 
 typedef int (*hashmap_compare)(void *a, void *b);
 typedef uint32_t (*hashmap_hash)(void *key);
-typedef int (*hashmap_traverse_cb)(void *key, void *data);
 
 typedef struct hashmap_t {
     darray_t *buckets;
@@ -22,6 +21,8 @@ typedef struct hashmap_node_t {
     void *data;
     uint32_t hash;
 } hashmap_node_t;
+
+typedef int (*hashmap_traverse_cb)(hashmap_node_t *node);
 
 hashmap_t *hashmap_create(hashmap_compare compare, hashmap_hash);
 void hashmap_destroy(hashmap_t *map);

@@ -7,7 +7,5 @@
 
 src/bstrlib.h
 src/btree.h
-src/hashmap.h
 src/ringbuffer.h
 src/sarray.h
-

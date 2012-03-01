@@ -44,6 +44,7 @@ hashmap_t *hashmap_create(hashmap_compare compare, hashmap_hash hash)
     map->compare = compare == NULL ? default_compare : compare;
     map->hash = hash == NULL ? default_hash : hash;
     map->buckets = darray_create(sizeof(darray_t *), DEFAULT_NUMBER_OF_BUCKETS);
+    map->buckets->end = map->buckets->max; // fake out expanding it
     check_mem(map->buckets);
 
     return map;
@@ -94,8 +95,9 @@ error:
 
 int hashmap_set(hashmap_t *map, void *key, void *data)
 {
-    int hash = map->hash(key);
+    uint32_t hash = map->hash(key);
     int bucket_n = hash % DEFAULT_NUMBER_OF_BUCKETS;
+    check(bucket_n >= 0, "Invalid bucket found: %d", bucket_n);
 
     darray_t *bucket = darray_get(map->buckets, bucket_n);
 
@@ -121,8 +123,9 @@ error:
 void *hashmap_get(hashmap_t *map, void *key)
 {
     int i = 0;
-    int hash = map->hash(key);
+    uint32_t hash = map->hash(key);
     int bucket_n = hash % DEFAULT_NUMBER_OF_BUCKETS;
+    check(bucket_n >= 0, "Invalid bucket found: %d", bucket_n);
 
     darray_t *bucket = darray_get(map->buckets, bucket_n);
     if(!bucket) return NULL;
@@ -138,3 +141,22 @@ error: // fallthrough
     return NULL;
 }
 
+
+int hashmap_traverse(hashmap_t *map, hashmap_traverse_cb traverse_cb) {
+    int i = 0;
+    int j = 0;
+    int rc = 0;
+
+    for(i = 0; i < darray_count(map->buckets); i++) {
+        darray_t *bucket = darray_get(map->buckets, i);
+        if(bucket) {
+            for(j = 0; j < darray_count(bucket); j++) {
+                hashmap_node_t *node = darray_get(bucket, j);
+                rc = traverse_cb(node->key, node->data);
+                if(rc != 0) return rc;
+            }
+        }
+    }
+
+    return 0;
+}

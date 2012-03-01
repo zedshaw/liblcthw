@@ -26,8 +26,6 @@ typedef int (*hashmap_traverse_cb)(hashmap_node_t *node);
 
 hashmap_t *hashmap_create(hashmap_compare compare, hashmap_hash);
 void hashmap_destroy(hashmap_t *map);
-void hashmap_clear(hashmap_t *map);
-void hashmap_clear_destroy(hashmap_t *map);
 
 int hashmap_set(hashmap_t *map, void *key, void *data);
 void *hashmap_get(hashmap_t *map, void *key);

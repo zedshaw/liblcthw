@@ -82,16 +82,6 @@ void hashmap_destroy(hashmap_t *map)
     }
 }
 
-void hashmap_clear(hashmap_t *map)
-{
-    map = NULL;
-}
-
-void hashmap_clear_destroy(hashmap_t *map)
-{
-    map = NULL;
-}
-
 static inline hashmap_node_t *hashmap_node_create(int hash, void *key, void *data)
 {
     hashmap_node_t *node = calloc(1, sizeof(hashmap_node_t));

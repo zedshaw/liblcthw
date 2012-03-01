@@ -147,7 +147,8 @@ error: // fallthrough
 }
 
 
-int hashmap_traverse(hashmap_t *map, hashmap_traverse_cb traverse_cb) {
+int hashmap_traverse(hashmap_t *map, hashmap_traverse_cb traverse_cb) 
+{
     int i = 0;
     int j = 0;
     int rc = 0;
@@ -165,3 +166,4 @@ int hashmap_traverse(hashmap_t *map, hashmap_traverse_cb traverse_cb) {
 
     return 0;
 }
+

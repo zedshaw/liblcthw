@@ -30,5 +30,6 @@ void hashmap_destroy(hashmap_t *map);
 int hashmap_set(hashmap_t *map, void *key, void *data);
 void *hashmap_get(hashmap_t *map, void *key);
 
+int hashmap_traverse(hashmap_t *map, hashmap_traverse_cb traverse_cb);
 
 #endif

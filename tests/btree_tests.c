@@ -38,7 +38,7 @@ char *test_get_set_traverse()
 {
     bstring test1 = bfromcstr("test data 1");
     bstring test2 = bfromcstr("test data 2");
-    bstring test3 = bfromcstr("test data 3");
+    bstring test3 = bfromcstr("xest data 3");
     bstring expect1 = bfromcstr("THE VALUE 1");
     bstring expect2 = bfromcstr("THE VALUE 2");
     bstring expect3 = bfromcstr("THE VALUE 3");

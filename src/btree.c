@@ -26,10 +26,16 @@ error:
     return NULL;
 }
 
+static int btree_destroy_cb(btree_node_t *node)
+{
+    free(node);
+    return 0;
+}
+
 void btree_destroy(btree_t *map)
 {
     if(map) {
-        // TOOD: complete this
+        btree_traverse(map, btree_destroy_cb);
         free(map);
     }
 }
@@ -112,7 +118,7 @@ static inline int btree_traverse_nodes(btree_node_t *node, btree_traverse_cb tra
 {
     int rc = 0;
 
-    // TODO: probably the totally wrong order on this
+    // TODO: probably the totally wrong order on this but works for destroy
     if(node->left) {
         rc = btree_traverse_nodes(node->left, traverse_cb);
         if(rc != 0) return rc;

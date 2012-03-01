@@ -9,7 +9,6 @@
 * Look up whatever tail recursion is available in GCC or others.
 
 src/bstrlib.h
-src/btree.h
 src/ringbuffer.h
 src/sarray.h
 

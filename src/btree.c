@@ -97,9 +97,17 @@ static inline btree_node_t *btree_getnode(btree_t *map, btree_node_t *node, void
     if(cmp == 0) {
         return node;
     } else if(cmp < 0) {
-        return btree_getnode(map, node->left, key);
+        if(node->left) {
+            return btree_getnode(map, node->left, key);
+        } else {
+            return NULL;
+        }
     } else {
-        return btree_getnode(map, node->right, key);
+        if(node->right) {
+            return btree_getnode(map, node->right, key);
+        } else {
+            return NULL;
+        }
     }
 }
 

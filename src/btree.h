@@ -1,34 +1,34 @@
-#ifndef _lcthw_btree_h
-#define _lcthw_btree_h
+#ifndef _lcthw_BSTree_h
+#define _lcthw_BSTree_h
 
 
-typedef int (*btree_compare)(void *a, void *b);
+typedef int (*BSTree_compare)(void *a, void *b);
 
-typedef struct btree_node_t {
+typedef struct BSTreeNode {
     void *key;
     void *data;
 
-    struct btree_node_t *left;
-    struct btree_node_t *right;
-    struct btree_node_t *parent;
-} btree_node_t;
+    struct BSTreeNode *left;
+    struct BSTreeNode *right;
+    struct BSTreeNode *parent;
+} BSTreeNode;
 
-typedef struct btree_t {
+typedef struct BSTree {
     int count;
-    btree_compare compare;
-    btree_node_t *root;
-} btree_t;
+    BSTree_compare compare;
+    BSTreeNode *root;
+} BSTree;
 
-typedef int (*btree_traverse_cb)(btree_node_t *node);
+typedef int (*BSTree_traverse_cb)(BSTreeNode *node);
 
-btree_t *btree_create(btree_compare compare);
-void btree_destroy(btree_t *map);
+BSTree *BSTree_create(BSTree_compare compare);
+void BSTree_destroy(BSTree *map);
 
-int btree_set(btree_t *map, void *key, void *data);
-void *btree_get(btree_t *map, void *key);
+int BSTree_set(BSTree *map, void *key, void *data);
+void *BSTree_get(BSTree *map, void *key);
 
-int btree_traverse(btree_t *map, btree_traverse_cb traverse_cb);
+int BSTree_traverse(BSTree *map, BSTree_traverse_cb traverse_cb);
 
-void *btree_delete(btree_t *map, void *key);
+void *BSTree_delete(BSTree *map, void *key);
 
 #endif

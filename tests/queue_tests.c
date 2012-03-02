@@ -4,52 +4,52 @@
 
 char *test_create_destroy()
 {
-    queue_t *queue = queue_create();
+    Queue *queue = Queue_create();
     mu_assert(queue != NULL, "Failed to create queue.");
 
-    queue_clear(queue); // should do nothing
-    queue_destroy(queue);
+    Queue_clear(queue); // should do nothing
+    Queue_destroy(queue);
 
-    queue = queue_create();
+    queue = Queue_create();
     mu_assert(queue != NULL, "Failed to make queue #2");
-    queue_clear_destroy(queue);
+    Queue_clear_destroy(queue);
 
     return NULL;
 }
 
 char *test_send_recv()
 {
-    queue_t *queue = queue_create();
+    Queue *queue = Queue_create();
     mu_assert(queue != NULL, "Failed to create test queue.");
     char *test1 = "test1 data";
     char *test2 = "test2 data";
     char *test3 = "test3 data";
 
-    queue_send(queue, test1);
-    mu_assert(queue_peek(queue) == test1, "Wrong last value.");
+    Queue_send(queue, test1);
+    mu_assert(Queue_peek(queue) == test1, "Wrong last value.");
 
-    queue_send(queue, test2);
-    mu_assert(queue_peek(queue) == test1, "Wrong last value");
+    Queue_send(queue, test2);
+    mu_assert(Queue_peek(queue) == test1, "Wrong last value");
 
-    queue_send(queue, test3);
-    mu_assert(queue_peek(queue) == test1, "Wrong last value.");
-    mu_assert(queue_count(queue) == 3, "Wrong count on push.");
+    Queue_send(queue, test3);
+    mu_assert(Queue_peek(queue) == test1, "Wrong last value.");
+    mu_assert(Queue_count(queue) == 3, "Wrong count on push.");
 
     QUEUE_FOREACH(queue, cur) {
-        debug("VAL: %s", cur->value);
+        debug("VAL: %s", (char *)cur->value);
     }
 
-    char *val = queue_recv(queue);
+    char *val = Queue_recv(queue);
     mu_assert(val == test1, "Wrong value on pop.");
 
-    val = queue_recv(queue);
+    val = Queue_recv(queue);
     mu_assert(val == test2, "Wrong value on pop.");
 
-    val = queue_recv(queue);
+    val = Queue_recv(queue);
     mu_assert(val == test3, "Wrong value on pop.");
-    mu_assert(queue_count(queue) == 0, "Wrong count after pop.");
+    mu_assert(Queue_count(queue) == 0, "Wrong count after pop.");
 
-    queue_destroy(queue);
+    Queue_destroy(queue);
 
     return NULL;
 }

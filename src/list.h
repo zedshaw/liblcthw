@@ -1,41 +1,41 @@
-#ifndef lcthw_list_h
-#define lcthw_list_h
+#ifndef lcthw_List_h
+#define lcthw_List_h
 
 #include <stdlib.h>
 
-struct list_node_t;
+struct ListNode;
 
-typedef struct list_node_t {
-    struct list_node_t *next;
-    struct list_node_t *prev;
+typedef struct ListNode {
+    struct ListNode *next;
+    struct ListNode *prev;
     void *value;
-} list_node_t;
+} ListNode;
 
-typedef struct list_t {
+typedef struct List {
     int count;
-    list_node_t *first;
-    list_node_t *last;
-} list_t;
+    ListNode *first;
+    ListNode *last;
+} List;
 
-list_t *list_create();
-void list_destroy(list_t *list);
-void list_clear(list_t *list);
-void list_clear_destroy(list_t *list);
+List *List_create();
+void List_destroy(List *list);
+void List_clear(List *list);
+void List_clear_destroy(List *list);
 
-#define list_count(A) ((A)->count)
-#define list_first(A) ((A)->first != NULL ? (A)->first->value : NULL)
-#define list_last(A) ((A)->last != NULL ? (A)->last->value : NULL)
+#define List_count(A) ((A)->count)
+#define List_first(A) ((A)->first != NULL ? (A)->first->value : NULL)
+#define List_last(A) ((A)->last != NULL ? (A)->last->value : NULL)
 
-void list_push(list_t *list, void *value);
-void *list_pop(list_t *list);
+void List_push(List *list, void *value);
+void *List_pop(List *list);
 
-void list_shift(list_t *list, void *value);
-void *list_unshift(list_t *list);
+void List_shift(List *list, void *value);
+void *List_unshift(List *list);
 
-void *list_remove(list_t *list, list_node_t *node);
+void *List_remove(List *list, ListNode *node);
 
-#define LIST_FOREACH(L, S, M, V) list_node_t *_node = NULL;\
-    list_node_t *V = NULL;\
+#define LIST_FOREACH(L, S, M, V) ListNode *_node = NULL;\
+    ListNode *V = NULL;\
     for(V = _node = L->S; _node != NULL; V = _node = _node->M)
 
 #endif

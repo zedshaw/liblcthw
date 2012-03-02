@@ -3,12 +3,12 @@
 #include <assert.h>
 
 
-list_t *list_create()
+List *List_create()
 {
-    return calloc(1, sizeof(list_t));
+    return calloc(1, sizeof(List));
 }
 
-void list_destroy(list_t *list)
+void List_destroy(List *list)
 {
     LIST_FOREACH(list, first, next, cur) {
         if(cur->prev) {
@@ -21,7 +21,7 @@ void list_destroy(list_t *list)
 }
 
 
-void list_clear(list_t *list)
+void List_clear(List *list)
 {
     LIST_FOREACH(list, first, next, cur) {
         free(cur->value);
@@ -29,16 +29,16 @@ void list_clear(list_t *list)
 }
 
 
-void list_clear_destroy(list_t *list)
+void List_clear_destroy(List *list)
 {
-    list_clear(list);
-    list_destroy(list);
+    List_clear(list);
+    List_destroy(list);
 }
 
 
-void list_push(list_t *list, void *value)
+void List_push(List *list, void *value)
 {
-    list_node_t *node = calloc(1, sizeof(list_node_t));
+    ListNode *node = calloc(1, sizeof(ListNode));
     check_mem(node);
 
     node->value = value;
@@ -58,15 +58,15 @@ error:
     return;
 }
 
-void *list_pop(list_t *list)
+void *List_pop(List *list)
 {
-    list_node_t *node = list->last;
-    return node != NULL ? list_remove(list, node) : NULL;
+    ListNode *node = list->last;
+    return node != NULL ? List_remove(list, node) : NULL;
 }
 
-void list_shift(list_t *list, void *value)
+void List_shift(List *list, void *value)
 {
-    list_node_t *node = calloc(1, sizeof(list_node_t));
+    ListNode *node = calloc(1, sizeof(ListNode));
     check_mem(node);
 
     node->value = value;
@@ -86,13 +86,13 @@ error:
     return;
 }
 
-void *list_unshift(list_t *list)
+void *List_unshift(List *list)
 {
-    list_node_t *node = list->first;
-    return node != NULL ? list_remove(list, node) : NULL;
+    ListNode *node = list->first;
+    return node != NULL ? List_remove(list, node) : NULL;
 }
 
-void *list_remove(list_t *list, list_node_t *node)
+void *List_remove(List *list, ListNode *node)
 {
     void *result = NULL;
 
@@ -107,8 +107,8 @@ void *list_remove(list_t *list, list_node_t *node)
     } else if (node == list->last) {
         list->last = node->prev;
     } else {
-        list_node_t *after = node->next;
-        list_node_t *before = node->prev;
+        ListNode *after = node->next;
+        ListNode *before = node->prev;
         after->prev = before;
         before->next = after;
     }

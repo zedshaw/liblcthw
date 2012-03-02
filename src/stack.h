@@ -1,20 +1,20 @@
-#ifndef _lcthw_stack_h
-#define _lcthw_stack_h
+#ifndef _lcthw_Stack_h
+#define _lcthw_Stack_h
 
-#include <list.h>
+#include <List.h>
 
-typedef list_t Stack_t;
+typedef List Stack;
 
-#define stack_create list_create
-#define stack_destroy list_destroy
-#define stack_clear list_clear
-#define stack_clear_destroy list_clear_destroy
+#define Stack_create List_create
+#define Stack_destroy List_destroy
+#define Stack_clear List_clear
+#define Stack_clear_destroy List_clear_destroy
 
-#define stack_push list_push
-#define stack_pop list_pop
-#define stack_peek list_last
+#define Stack_push List_push
+#define Stack_pop List_pop
+#define Stack_peek List_last
 
-#define stack_count list_count
+#define Stack_count List_count
 
 #define STACK_FOREACH(S, V) LIST_FOREACH(S, last, prev, V)
 

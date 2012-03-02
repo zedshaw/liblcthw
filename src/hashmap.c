@@ -215,7 +215,4 @@ void *Hashmap_delete(Hashmap *map, void *key)
     }
 
     return data; 
-
-error:
-    return NULL;
 }

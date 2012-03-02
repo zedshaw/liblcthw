@@ -4,29 +4,29 @@
 #include <assert.h>
 #include <dbg.h>
 
-typedef struct tst_collect_t {
+typedef struct TSTreeCollect {
     DArray *values;
-    tst_collect_test_cb tester;
+    TSTree_collect_test_cb tester;
     const char *key;
     size_t len;
-} tst_collect_t;
+} TSTreeCollect;
 
 enum {
     INITIAL_DARRAY_SIZE = 20
 };
 
-static void tst_collect_build(void *value, tst_collect_t *results)
+static void TSTree_collect_build(void *value, TSTreeCollect *results)
 {
     if(!results->tester || results->tester(value, results->key, results->len)) {
         DArray_push(results->values, value);
     }
 }
 
-DArray *tst_collect(tst_t *root, const char *s, size_t len, tst_collect_test_cb tester)
+DArray *TSTree_collect(TSTree *root, const char *s, size_t len, TSTree_collect_test_cb tester)
 {
-    tst_collect_t results = {.values = NULL, .tester = tester, .key = s, .len = len};
-    tst_t *p = root;
-    tst_t *last = p;
+    TSTreeCollect results = {.values = NULL, .tester = tester, .key = s, .len = len};
+    TSTree *p = root;
+    TSTree *last = p;
     size_t i = 0;
     results.values = DArray_create(sizeof(void *), INITIAL_DARRAY_SIZE);
 
@@ -47,18 +47,18 @@ DArray *tst_collect(tst_t *root, const char *s, size_t len, tst_collect_test_cb 
 
     if((last && results.tester) || p) {
         // we found node matching this prefix, so traverse and collect
-        tst_traverse(p == NULL ? last : p, (tst_traverse_cb)tst_collect_build, &results);
+        TSTree_traverse(p == NULL ? last : p, (TSTree_traverse_cb)TSTree_collect_build, &results);
     }
 
     return results.values;
 }
 
-void *tst_search_suffix(tst_t *root, const char *s, size_t len)
+void *TSTree_search_suffix(TSTree *root, const char *s, size_t len)
 {
     if(len == 0) return NULL;
 
-    tst_t *p = root;
-    tst_t *last = NULL;
+    TSTree *p = root;
+    TSTree *last = NULL;
     int i = len-1;
 
     while(i >= 0 && p) {
@@ -84,12 +84,12 @@ void *tst_search_suffix(tst_t *root, const char *s, size_t len)
     return p ? p->value : NULL;
 }
 
-void *tst_search_prefix(tst_t *root, const char *s, size_t len)
+void *TSTree_search_prefix(TSTree *root, const char *s, size_t len)
 {
     if(len == 0) return NULL;
 
-    tst_t *p = root;
-    tst_t *last = NULL;
+    TSTree *p = root;
+    TSTree *last = NULL;
     size_t i = 0;
 
     while(i < len && p) {
@@ -116,9 +116,9 @@ void *tst_search_prefix(tst_t *root, const char *s, size_t len)
     return p ? p->value : NULL;
 }
 
-void *tst_search(tst_t *root, const char *s, size_t len)
+void *TSTree_search(TSTree *root, const char *s, size_t len)
 {
-    tst_t *p = root;
+    TSTree *p = root;
     size_t i = 0;
 
     while(i < len && p) {
@@ -141,10 +141,10 @@ void *tst_search(tst_t *root, const char *s, size_t len)
 }
 
 
-static inline tst_t *tst_insert_base(tst_t *root, tst_t *p, const char *s, size_t len, void *value)
+static inline TSTree *TSTree_insert_base(TSTree *root, TSTree *p, const char *s, size_t len, void *value)
 {
     if (p == NULL) { 
-        p = (tst_t *) calloc(1, sizeof(tst_t));
+        p = (TSTree *) calloc(1, sizeof(TSTree));
 
         if(root == NULL) {
             root = p;
@@ -154,52 +154,52 @@ static inline tst_t *tst_insert_base(tst_t *root, tst_t *p, const char *s, size_
     }
 
     if (*s < p->splitchar) {
-        p->low = tst_insert_base(root, p->low, s, len, value); 
+        p->low = TSTree_insert_base(root, p->low, s, len, value); 
     } else if (*s == p->splitchar) { 
         if (len > 1) {
             // not done yet, keep going but one less
-            p->equal = tst_insert_base(root, p->equal, s+1, len - 1, value);
+            p->equal = TSTree_insert_base(root, p->equal, s+1, len - 1, value);
         } else {
             assert(p->value == NULL && "Duplicate insert into tst.");
             p->value = value;
         }
     } else {
-        p->high = tst_insert_base(root, p->high, s, len, value);
+        p->high = TSTree_insert_base(root, p->high, s, len, value);
     }
 
     return p; 
 }
 
-tst_t *tst_insert(tst_t *p, const char *s, size_t len, void *value)
+TSTree *TSTree_insert(TSTree *p, const char *s, size_t len, void *value)
 {
-    return tst_insert_base(p, p, s, len, value);
+    return TSTree_insert_base(p, p, s, len, value);
 }
 
 
-void tst_traverse(tst_t *p, tst_traverse_cb cb, void *data)
+void TSTree_traverse(TSTree *p, TSTree_traverse_cb cb, void *data)
 {
     if (!p) return;
 
-    if(p->low) tst_traverse(p->low, cb, data);
+    if(p->low) TSTree_traverse(p->low, cb, data);
 
     if (p->equal) {
-        tst_traverse(p->equal, cb, data); 
+        TSTree_traverse(p->equal, cb, data); 
     }
 
-    if(p->high) tst_traverse(p->high, cb, data); 
+    if(p->high) TSTree_traverse(p->high, cb, data); 
 
     if(p->value) cb(p->value, data);
 }
 
-void tst_destroy(tst_t *p)
+void TSTree_destroy(TSTree *p)
 {
-    if(p->low) tst_destroy(p->low);
+    if(p->low) TSTree_destroy(p->low);
 
     if (p->equal) {
-        tst_destroy(p->equal);
+        TSTree_destroy(p->equal);
     }
 
-    if(p->high) tst_destroy(p->high);
+    if(p->high) TSTree_destroy(p->high);
 
     if(p) free(p);
 }

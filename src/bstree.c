@@ -1,5 +1,5 @@
 #undef NDEBUG
-#include "btree.h"
+#include "bstree.h"
 #include <stdlib.h>
 #include "dbg.h"
 #include <bstrlib.h>

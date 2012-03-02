@@ -106,25 +106,25 @@ char *test_tst_traverse()
 
 char *test_tst_collect()
 {
-    darray_t *found = tst_collect(node, "TE", 2, NULL);
-    debug("collect found %d values", (int)darray_count(found));
+    DArray *found = tst_collect(node, "TE", 2, NULL);
+    debug("collect found %d values", (int)DArray_count(found));
 
-    mu_assert(darray_count(found) == 3, "Didn't find 2 with prefix TE.");
-    darray_destroy(found);
+    mu_assert(DArray_count(found) == 3, "Didn't find 2 with prefix TE.");
+    DArray_destroy(found);
 
     found = tst_collect(node, "T", 1, NULL);
-    debug("collect found %d values", (int)darray_count(found));
-    mu_assert(darray_count(found) == 4, "Didn't find 4 with prefix T.");
-    darray_destroy(found);
+    debug("collect found %d values", (int)DArray_count(found));
+    mu_assert(DArray_count(found) == 4, "Didn't find 4 with prefix T.");
+    DArray_destroy(found);
 
     found = tst_collect(node, "TEST2", 5, NULL);
-    debug("collect found %d values", (int)darray_count(found));
-    mu_assert(darray_count(found) == 1, "Didn't find 1 with prefix TEST2.");
-    darray_destroy(found);
+    debug("collect found %d values", (int)DArray_count(found));
+    mu_assert(DArray_count(found) == 1, "Didn't find 1 with prefix TEST2.");
+    DArray_destroy(found);
 
     found = tst_collect(node, "XNOT", 4, NULL);
-    mu_assert(darray_count(found) == 0, "Should not find any with prefix XNOT.");
-    darray_destroy(found);
+    mu_assert(DArray_count(found) == 0, "Should not find any with prefix XNOT.");
+    DArray_destroy(found);
 
     return NULL;
 }

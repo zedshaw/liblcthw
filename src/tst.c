@@ -5,7 +5,7 @@
 #include <dbg.h>
 
 typedef struct tst_collect_t {
-    darray_t *values;
+    DArray *values;
     tst_collect_test_cb tester;
     const char *key;
     size_t len;
@@ -18,17 +18,17 @@ enum {
 static void tst_collect_build(void *value, tst_collect_t *results)
 {
     if(!results->tester || results->tester(value, results->key, results->len)) {
-        darray_push(results->values, value);
+        DArray_push(results->values, value);
     }
 }
 
-darray_t *tst_collect(tst_t *root, const char *s, size_t len, tst_collect_test_cb tester)
+DArray *tst_collect(tst_t *root, const char *s, size_t len, tst_collect_test_cb tester)
 {
     tst_collect_t results = {.values = NULL, .tester = tester, .key = s, .len = len};
     tst_t *p = root;
     tst_t *last = p;
     size_t i = 0;
-    results.values = darray_create(sizeof(void *), INITIAL_DARRAY_SIZE);
+    results.values = DArray_create(sizeof(void *), INITIAL_DARRAY_SIZE);
 
     // first we get to where we match the prefix
     while(i < len && p) {

@@ -36,7 +36,7 @@ char *test_send_recv()
     mu_assert(Stack_count(stack) == 3, "Wrong count on push.");
 
     STACK_FOREACH(stack, cur) {
-        debug("VAL: %s", cur->value);
+        debug("VAL: %s", (char *)cur->value);
     }
 
     char *val = Stack_pop(stack);

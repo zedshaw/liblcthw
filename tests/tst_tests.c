@@ -1,5 +1,5 @@
 #include "minunit.h"
-#include <tst.h>
+#include <tstree.h>
 #include <string.h>
 #include <assert.h>
 #include <bstrlib.h>

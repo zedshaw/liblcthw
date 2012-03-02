@@ -1,7 +1,7 @@
 #ifndef _lcthw_Stack_h
 #define _lcthw_Stack_h
 
-#include <List.h>
+#include <list.h>
 
 typedef List Stack;
 

@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "tst.h"
+#include "tstree.h"
 #include <stdio.h>
 #include <assert.h>
 #include <dbg.h>

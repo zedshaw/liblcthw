@@ -84,7 +84,7 @@ char *test_get_set_traverse()
 
     deleted = (bstring)btree_delete(map, test3);
     mu_assert(deleted != NULL, "Got NULL on delete.");
-    mu_assert(deleted == expect3, "Should get test2");
+    mu_assert(deleted == expect3, "Should get test3");
     result = btree_get(map, test3);
     mu_assert(result == NULL, "Should delete.");
 

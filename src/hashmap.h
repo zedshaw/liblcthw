@@ -4,14 +4,13 @@
 #include "darray.h"
 #include <stdint.h>
 
-#define DEFAULT_BUCKET_EXPAND 100
+#define DEFAULT_NUMBER_OF_BUCKETS 100
 
 typedef int (*hashmap_compare)(void *a, void *b);
 typedef uint32_t (*hashmap_hash)(void *key);
 
 typedef struct hashmap_t {
     darray_t *buckets;
-    int count;
     hashmap_compare compare;
     hashmap_hash hash;
 } hashmap_t;
@@ -31,5 +30,7 @@ int hashmap_set(hashmap_t *map, void *key, void *data);
 void *hashmap_get(hashmap_t *map, void *key);
 
 int hashmap_traverse(hashmap_t *map, hashmap_traverse_cb traverse_cb);
+
+void *hashmap_delete(hashmap_t *map, void *key);
 
 #endif

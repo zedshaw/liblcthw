@@ -10,6 +10,7 @@ typedef struct btree_node_t {
 
     struct btree_node_t *left;
     struct btree_node_t *right;
+    struct btree_node_t *parent;
 } btree_node_t;
 
 typedef struct btree_t {
@@ -28,5 +29,6 @@ void *btree_get(btree_t *map, void *key);
 
 int btree_traverse(btree_t *map, btree_traverse_cb traverse_cb);
 
+void *btree_delete(btree_t *map, void *key);
 
 #endif

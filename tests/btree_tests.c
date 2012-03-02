@@ -70,6 +70,24 @@ char *test_get_set_traverse()
     mu_assert(rc == 1, "Failed to traverse.");
     mu_assert(traverse_called == 2, "Wrong count traverse for fail.");
 
+    bstring deleted = (bstring)btree_delete(map, test1);
+    mu_assert(deleted != NULL, "Got NULL on delete.");
+    mu_assert(deleted == expect1, "Should get test1");
+    result = btree_get(map, test1);
+    mu_assert(result == NULL, "Should delete.");
+
+    deleted = (bstring)btree_delete(map, test2);
+    mu_assert(deleted != NULL, "Got NULL on delete.");
+    mu_assert(deleted == expect2, "Should get test2");
+    result = btree_get(map, test2);
+    mu_assert(result == NULL, "Should delete.");
+
+    deleted = (bstring)btree_delete(map, test3);
+    mu_assert(deleted != NULL, "Got NULL on delete.");
+    mu_assert(deleted == expect3, "Should get test2");
+    result = btree_get(map, test3);
+    mu_assert(result == NULL, "Should delete.");
+
     btree_destroy(map);
     bdestroy(test1);
     bdestroy(test2);

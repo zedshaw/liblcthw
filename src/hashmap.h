@@ -1,36 +1,36 @@
-#ifndef _lcthw_hashmap_h
-#define _lcthw_hashmap_h
+#ifndef _lcthw_Hashmap_h
+#define _lcthw_Hashmap_h
 
 #include "darray.h"
 #include <stdint.h>
 
 #define DEFAULT_NUMBER_OF_BUCKETS 100
 
-typedef int (*hashmap_compare)(void *a, void *b);
-typedef uint32_t (*hashmap_hash)(void *key);
+typedef int (*Hashmap_compare)(void *a, void *b);
+typedef uint32_t (*Hashmap_hash)(void *key);
 
-typedef struct hashmap_t {
+typedef struct Hashmap {
     darray_t *buckets;
-    hashmap_compare compare;
-    hashmap_hash hash;
-} hashmap_t;
+    Hashmap_compare compare;
+    Hashmap_hash hash;
+} Hashmap;
 
-typedef struct hashmap_node_t {
+typedef struct HashmapNode {
     void *key;
     void *data;
     uint32_t hash;
-} hashmap_node_t;
+} HashmapNode;
 
-typedef int (*hashmap_traverse_cb)(hashmap_node_t *node);
+typedef int (*Hashmap_traverse_cb)(HashmapNode *node);
 
-hashmap_t *hashmap_create(hashmap_compare compare, hashmap_hash);
-void hashmap_destroy(hashmap_t *map);
+Hashmap *Hashmap_create(Hashmap_compare compare, Hashmap_hash);
+void Hashmap_destroy(Hashmap *map);
 
-int hashmap_set(hashmap_t *map, void *key, void *data);
-void *hashmap_get(hashmap_t *map, void *key);
+int Hashmap_set(Hashmap *map, void *key, void *data);
+void *Hashmap_get(Hashmap *map, void *key);
 
-int hashmap_traverse(hashmap_t *map, hashmap_traverse_cb traverse_cb);
+int Hashmap_traverse(Hashmap *map, Hashmap_traverse_cb traverse_cb);
 
-void *hashmap_delete(hashmap_t *map, void *key);
+void *Hashmap_delete(Hashmap *map, void *key);
 
 #endif

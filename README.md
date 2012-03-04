@@ -30,5 +30,5 @@ Algorithms Needed
 * async file client/server -- ringbuffer, queue
 * non-linear suffix tree delta -- that was cool, figure it out again
 * XTEA encryption -- work on bstring, darray?
-
+* timsort maybe?
 

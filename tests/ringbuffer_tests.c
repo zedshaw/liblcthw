@@ -1,11 +1,26 @@
 #include "minunit.h"
 #include <lcthw/ringbuffer.h>
 
+static RingBuffer *buffer = NULL;
+char data[100] = {'\0'};
+
+char *test_create()
+{
+    buffer = RingBuffer_create(100);
+    mu_assert(buffer != NULL, "Failed to make ringbuffer.");
+
+    return NULL;
+}
+
+char *test_destroy()
+{
+    RingBuffer_destroy(buffer);
+
+    return NULL;
+}
+
 char *test_read_write()
 {
-    RingBuffer *buffer = RingBuffer_create(100);
-    char *data = calloc(1, 100);
-
     mu_assert(RingBuffer_empty(buffer), "Should be empty.");
     mu_assert(!RingBuffer_full(buffer), "Should NOT be full.");
 
@@ -27,9 +42,6 @@ char *test_read_write()
     mu_assert(rc == sizeof("Zed"), "Failed to read the Zed out.");
     mu_assert(RingBuffer_empty(buffer), "Should be empty.");
 
-    RingBuffer_destroy(buffer);
-    free(data);
-
     return NULL;
 }
 
@@ -38,7 +50,9 @@ char *test_read_write()
 char *all_tests() {
     mu_suite_start();
 
+    mu_run_test(test_create);
     mu_run_test(test_read_write);
+    mu_run_test(test_destroy);
 
     return NULL;
 }

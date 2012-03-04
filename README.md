@@ -29,6 +29,8 @@ Algorithms Needed
 * all substrings -- tst vs. sarray
 * async file client/server -- ringbuffer, queue
 * non-linear suffix tree delta -- that was cool, figure it out again
-* XTEA encryption -- work on bstring, darray?
-* timsort maybe?
+* RC4 is actually cooler and fits the student at that stage
+* timsort maybe? -- no too complicated
+* merge sort on double-linked-lists is a good algorithm.
+
 

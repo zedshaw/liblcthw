@@ -70,7 +70,7 @@ error:
 }
 
 // test for big number of elements
-static char *test_RadixMap_operations()
+static char *test_operations()
 {
     size_t N = 200;
 
@@ -115,14 +115,14 @@ static char *test_RadixMap_operations()
 }
 
 
-static char *test_RadixMap_simulate()
+static char *test_simulate()
 {
    uint32_t fd = (uint32_t)(rand() | (rand() << 16));
    int i = 0;
    size_t key = 0;
    int connects = 0, disconnects = 0, activities = 0;
    RMElement *el = NULL;
-   RadixMap *map = RadixMap_create(50000);
+   RadixMap *map = RadixMap_create(500);
    // start the counter at just near max to test that out
    map->counter = UINT32_MAX - 100;
 
@@ -134,7 +134,7 @@ static char *test_RadixMap_simulate()
    }
 
    debug("ENTERING LOOP");
-   for(i = 0; i < 1000000; i++) {
+   for(i = 0; i < 10000; i++) {
        switch((rand() + 1) % 4) {
            case 0:
                // connect, so add it on
@@ -180,8 +180,8 @@ char *all_tests()
     mu_suite_start();
     srand(time(NULL));
 
-    mu_run_test(test_RadixMap_operations);
-    mu_run_test(test_RadixMap_simulate);
+    mu_run_test(test_operations);
+    mu_run_test(test_simulate);
 
     return NULL;
 }

@@ -3,7 +3,6 @@
 
 char *test_create_destroy()
 {
-    int i = 0;
     char test[] = "abracadabra";
     char test2[] = "acadabra";
     SuffixArray *sarry = SuffixArray_create(test, sizeof(test));

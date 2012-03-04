@@ -3,7 +3,6 @@
 #include <string.h>
 #include <assert.h>
 #include <bstrlib.h>
-#include <bstraux.h>
 
 
 TSTree *node = NULL;

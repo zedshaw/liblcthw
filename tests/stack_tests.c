@@ -2,54 +2,47 @@
 #include <lcthw/stack.h>
 #include <assert.h>
 
-char *test_create_destroy()
+static Stack *stack = NULL;
+char *tests[] = {"test1 data", "test2 data", "test3 data"};
+#define NUM_TESTS 3
+
+
+char *test_create()
 {
-    Stack *stack = Stack_create();
-    mu_assert(stack != NULL, "Failed to create stack.");
-
-    Stack_clear(stack); // should do nothing
-    Stack_destroy(stack);
-
     stack = Stack_create();
-    mu_assert(stack != NULL, "Failed to make stack #2");
-    Stack_clear_destroy(stack);
+    mu_assert(stack != NULL, "Failed to create stack.");
 
     return NULL;
 }
 
-char *test_send_recv()
+char *test_destroy()
 {
-    Stack *stack = Stack_create();
-    mu_assert(stack != NULL, "Failed to create test stack.");
-    char *test1 = "test1 data";
-    char *test2 = "test2 data";
-    char *test3 = "test3 data";
+    mu_assert(stack != NULL, "Failed to make stack #2");
+    Stack_destroy(stack);
 
-    Stack_push(stack, test1);
-    mu_assert(Stack_peek(stack) == test1, "Wrong last value.");
+    return NULL;
+}
 
-    Stack_push(stack, test2);
-    mu_assert(Stack_peek(stack) == test2, "Wrong last value");
+char *test_push_pop()
+{
+    int i = 0;
+    for(i = 0; i < NUM_TESTS; i++) {
+        Stack_push(stack, tests[i]);
+        mu_assert(Stack_peek(stack) == tests[i], "Wrong next value.");
+    }
 
-    Stack_push(stack, test3);
-    mu_assert(Stack_peek(stack) == test3, "Wrong last value.");
-    mu_assert(Stack_count(stack) == 3, "Wrong count on push.");
+    mu_assert(Stack_count(stack) == NUM_TESTS, "Wrong count on push.");
 
     STACK_FOREACH(stack, cur) {
         debug("VAL: %s", (char *)cur->value);
     }
 
-    char *val = Stack_pop(stack);
-    mu_assert(val == test3, "Wrong value on pop.");
+    for(i = NUM_TESTS - 1; i >= 0; i--) {
+        char *val = Stack_pop(stack);
+        mu_assert(val == tests[i], "Wrong value on pop.");
+    }
 
-    val = Stack_pop(stack);
-    mu_assert(val == test2, "Wrong value on pop.");
-
-    val = Stack_pop(stack);
-    mu_assert(val == test1, "Wrong value on pop.");
     mu_assert(Stack_count(stack) == 0, "Wrong count after pop.");
-
-    Stack_destroy(stack);
 
     return NULL;
 }
@@ -57,8 +50,9 @@ char *test_send_recv()
 char *all_tests() {
     mu_suite_start();
 
-    mu_run_test(test_create_destroy);
-    mu_run_test(test_send_recv);
+    mu_run_test(test_create);
+    mu_run_test(test_push_pop);
+    mu_run_test(test_destroy);
 
     return NULL;
 }

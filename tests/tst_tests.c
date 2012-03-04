@@ -13,32 +13,32 @@ char *value4 = "VALUE4";
 char *reverse = "VALUER";
 int traverse_count = 0;
 
-bstring test1;
-bstring test2;
-bstring test3;
-bstring test4;
+struct tagbstring test1 = bsStatic("TEST");
+struct tagbstring test2 = bsStatic("TEST2");
+struct tagbstring test3 = bsStatic("TSET");
+struct tagbstring test4 = bsStatic("T");
 
-char *test_TSTree_insert() 
+char *test_insert() 
 {
-    node = TSTree_insert(node, bdata(test1), blength(test1), valueA);
+    node = TSTree_insert(node, bdata(&test1), blength(&test1), valueA);
     mu_assert(node != NULL, "Failed to insert into tst.");
 
-    node = TSTree_insert(node, bdata(test2), blength(test2), value2);
+    node = TSTree_insert(node, bdata(&test2), blength(&test2), value2);
     mu_assert(node != NULL, "Failed to insert into tst with second name.");
 
-    node = TSTree_insert(node, bdata(test3), blength(test3), reverse);
+    node = TSTree_insert(node, bdata(&test3), blength(&test3), reverse);
     mu_assert(node != NULL, "Failed to insert into tst with reverse name.");
 
-    node = TSTree_insert(node, bdata(test4), blength(test4), value4);
+    node = TSTree_insert(node, bdata(&test4), blength(&test4), value4);
     mu_assert(node != NULL, "Failed to insert into tst with second name.");
 
     return NULL;
 }
 
-char *test_TSTree_search_exact()
+char *test_search_exact()
 {
     // tst returns the last one inserted
-    void *res = TSTree_search(node, bdata(test1), blength(test1));
+    void *res = TSTree_search(node, bdata(&test1), blength(&test1));
     mu_assert(res == valueA, "Got the wrong value back, should get A not B.");
 
     // tst does not find if not exact
@@ -48,9 +48,9 @@ char *test_TSTree_search_exact()
     return NULL;
 }
 
-char *test_TSTree_search_suffix()
+char *test_search_suffix()
 {
-    void *res = TSTree_search_suffix(node, bdata(test1), blength(test1));
+    void *res = TSTree_search_suffix(node, bdata(&test1), blength(&test1));
     debug("result: %p, expected: %p", res, reverse);
     mu_assert(res == reverse, "Got the wrong value.");
 
@@ -66,13 +66,13 @@ char *test_TSTree_search_suffix()
     return NULL;
 }
 
-char *test_TSTree_search_prefix()
+char *test_search_prefix()
 {
-    void *res = TSTree_search_prefix(node, bdata(test1), blength(test1));
+    void *res = TSTree_search_prefix(node, bdata(&test1), blength(&test1));
     debug("result: %p, expected: %p", res, valueA);
     mu_assert(res == valueA, "Got wrong valueA by prefix.");
 
-    res = TSTree_search_prefix(node, bdata(test1), 1);
+    res = TSTree_search_prefix(node, bdata(&test1), 1);
     debug("result: %p, expected: %p", res, valueA);
     mu_assert(res == value4, "Got wrong value4 for prefix of 1.");
 
@@ -93,7 +93,7 @@ void TSTree_traverse_test_cb(void *value, void *data)
     traverse_count++;
 }
 
-char *test_TSTree_traverse()
+char *test_traverse()
 {
     traverse_count = 0;
     TSTree_traverse(node, TSTree_traverse_test_cb, valueA);
@@ -103,7 +103,7 @@ char *test_TSTree_traverse()
     return NULL;
 }
 
-char *test_TSTree_collect()
+char *test_collect()
 {
     DArray *found = TSTree_collect(node, "TE", 2, NULL);
     debug("collect found %d values", (int)DArray_count(found));
@@ -128,7 +128,7 @@ char *test_TSTree_collect()
     return NULL;
 }
 
-char *test_TSTree_destroy()
+char *test_destroy()
 {
     TSTree_destroy(node);
 
@@ -138,23 +138,13 @@ char *test_TSTree_destroy()
 char * all_tests() {
     mu_suite_start();
 
-    test1 = bfromcstr("TEST");
-    test2 = bfromcstr("TEST2");
-    test3 = bfromcstr("TSET");
-    test4 = bfromcstr("T");
-
-    mu_run_test(test_TSTree_insert);
-    mu_run_test(test_TSTree_search_exact);
-    mu_run_test(test_TSTree_search_suffix);
-    mu_run_test(test_TSTree_search_prefix);
-    mu_run_test(test_TSTree_traverse);
-    mu_run_test(test_TSTree_collect);
-    mu_run_test(test_TSTree_destroy);
-
-    bdestroy(test1);
-    bdestroy(test2);
-    bdestroy(test3);
-    bdestroy(test4);
+    mu_run_test(test_insert);
+    mu_run_test(test_search_exact);
+    mu_run_test(test_search_suffix);
+    mu_run_test(test_search_prefix);
+    mu_run_test(test_traverse);
+    mu_run_test(test_collect);
+    mu_run_test(test_destroy);
 
     return NULL;
 }

@@ -1,8 +1,8 @@
 #undef NDEBUG
-#include "bstree.h"
+#include <lcthw/dbg.h>
+#include <lcthw/bstree.h>
 #include <stdlib.h>
-#include "dbg.h"
-#include <bstrlib.h>
+#include <lcthw/bstrlib.h>
 
 static int default_compare(void *a, void *b)
 {

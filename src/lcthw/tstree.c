@@ -1,8 +1,8 @@
 #include <stdlib.h>
-#include "tstree.h"
 #include <stdio.h>
 #include <assert.h>
-#include <dbg.h>
+#include <lcthw/dbg.h>
+#include <lcthw/tstree.h>
 
 typedef struct TSTreeCollect {
     DArray *values;

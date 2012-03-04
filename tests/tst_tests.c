@@ -1,8 +1,8 @@
 #include "minunit.h"
-#include <tstree.h>
+#include <lcthw/tstree.h>
 #include <string.h>
 #include <assert.h>
-#include <bstrlib.h>
+#include <lcthw/bstrlib.h>
 
 
 TSTree *node = NULL;

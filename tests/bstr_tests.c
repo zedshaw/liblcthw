@@ -1,12 +1,12 @@
 #undef NDEBUG
 #include <stdio.h>
-#include <bstrlib.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <limits.h>
 #include <ctype.h>
-#include <dbg.h>
+#include <lcthw/dbg.h>
+#include <lcthw/bstrlib.h>
 
 /*
  * This source file is part of the bstring string library.  This code was

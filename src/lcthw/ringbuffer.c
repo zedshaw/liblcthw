@@ -1,9 +1,9 @@
 #undef NDEBUG
-#include "ringbuffer.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "dbg.h"
+#include <lcthw/dbg.h>
+#include <lcthw/ringbuffer.h>
 
 RingBuffer *RingBuffer_create(int length)
 {

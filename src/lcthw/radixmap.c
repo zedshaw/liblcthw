@@ -5,8 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include "radixmap.h"
-#include "dbg.h"
+#include <lcthw/radixmap.h>
+#include <lcthw/dbg.h>
 
 #define ByteOf(x,y) (((uint8_t *)x)[(y)])
 

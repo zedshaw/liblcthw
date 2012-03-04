@@ -1,5 +1,5 @@
 #include "minunit.h"
-#include <radixmap.h>
+#include <lcthw/radixmap.h>
 #include <time.h>
 
 static int make_random(RadixMap *map)

@@ -1,6 +1,6 @@
 #undef NDEBUG
-#include "sarray.h"
-#include "dbg.h"
+#include <lcthw/sarray.h>
+#include <lcthw/dbg.h>
 #include <stdlib.h>
 
 

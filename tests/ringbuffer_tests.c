@@ -1,5 +1,5 @@
 #include "minunit.h"
-#include <ringbuffer.h>
+#include <lcthw/ringbuffer.h>
 
 char *test_read_write()
 {

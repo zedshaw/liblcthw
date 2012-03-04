@@ -1,5 +1,5 @@
-#include "list.h"
-#include "dbg.h"
+#include <lcthw/list.h>
+#include <lcthw/dbg.h>
 #include <assert.h>
 
 

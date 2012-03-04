@@ -1,9 +1,8 @@
 #undef NDEBUG
-#include "Hashmap.h"
-#include "dbg.h"
-#include <bstrlib.h>
 #include <stdint.h>
-#include <radixmap.h>
+#include <lcthw/hashmap.h>
+#include <lcthw/dbg.h>
+#include <lcthw/bstrlib.h>
 
 static int default_compare(void *a, void *b)
 {

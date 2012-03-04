@@ -1,5 +1,5 @@
 #include "minunit.h"
-#include <sarray.h>
+#include <lcthw/sarray.h>
 
 char *test_create_destroy()
 {

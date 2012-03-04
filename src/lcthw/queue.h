@@ -1,7 +1,7 @@
 #ifndef _lcthw_Queue_h
 #define _lcthw_Queue_h
 
-#include <list.h>
+#include <lcthw/list.h>
 
 typedef List Queue;
 

@@ -1,5 +1,5 @@
 #include "minunit.h"
-#include <list.h>
+#include <lcthw/list.h>
 #include <assert.h>
 
 char *test_create_destroy()

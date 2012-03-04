@@ -1,8 +1,8 @@
 #ifndef _lcthw_Hashmap_h
 #define _lcthw_Hashmap_h
 
-#include "darray.h"
 #include <stdint.h>
+#include <lcthw/darray.h>
 
 #define DEFAULT_NUMBER_OF_BUCKETS 100
 

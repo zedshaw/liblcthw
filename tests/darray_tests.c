@@ -1,5 +1,5 @@
 #include "minunit.h"
-#include <darray.h>
+#include <lcthw/darray.h>
 
 char *test_DArray_operations()
 {

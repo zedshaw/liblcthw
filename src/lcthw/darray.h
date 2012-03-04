@@ -1,8 +1,8 @@
 #ifndef _DArray_h
 #define _DArray_h
-#include "dbg.h"
 #include <stdlib.h>
 #include <assert.h>
+#include <lcthw/dbg.h>
 
 typedef struct DArray {
     int end;

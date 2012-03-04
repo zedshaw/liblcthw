@@ -1,7 +1,7 @@
 #include "minunit.h"
-#include <Hashmap.h>
+#include <lcthw/hashmap.h>
 #include <assert.h>
-#include <bstrlib.h>
+#include <lcthw/bstrlib.h>
 
 char *test_create_destroy()
 {

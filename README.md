@@ -9,10 +9,8 @@ TODO
 ====
 
 * Make tst_traverse abort if too deep.
-* Have these be in a lcthw/*.h setup and that is installed.
 * Add the RadixMap_sort_tail from Mongrel2 to study as an exercise.
 * Look up whatever tail recursion is available in GCC or others.
-* Don't implement a string lib, do a review of the key parts of bstrlib.
 
 
 Algorithms Needed

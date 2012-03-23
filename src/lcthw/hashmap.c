@@ -91,6 +91,7 @@ static inline HashmapNode *Hashmap_node_create(int hash, void *key, void *data)
     node->hash = hash;
 
     return node;
+
 error:
     return NULL;
 }

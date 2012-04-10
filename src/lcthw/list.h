@@ -38,10 +38,4 @@ void *List_remove(List *list, ListNode *node);
     ListNode *V = NULL;\
     for(V = _node = L->S; _node != NULL; V = _node = _node->M)
 
-typedef int (*List_compare)(void *a, void *b);
-
-int List_bubble_sort(List *list, List_compare cmp);
-
-List *List_merge_sort(List *list, List_compare cmp);
-
 #endif

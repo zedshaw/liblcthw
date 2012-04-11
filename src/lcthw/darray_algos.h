@@ -2,8 +2,6 @@
 #define darray_algos_h
 
 #include <lcthw/darray.h>
-#include <lcthw/dbg.h>
-
 
 typedef int (*DArray_compare)(const void *a, const void *b);
 

@@ -32,38 +32,34 @@ int is_sorted(DArray *array)
     return 1;
 }
 
-char *test_qsort()
+char *run_sort_test(int (*func)(DArray *, DArray_compare), const char *name)
 {
     DArray *words = create_words();
     mu_assert(!is_sorted(words), "Words should start not sorted.");
 
-    DArray_qsort(words, (DArray_compare)testcmp);
-    mu_assert(is_sorted(words), "qsort failed");
+    debug("--- Testing %s sorting algorithm", name);
+    int rc = func(words, (DArray_compare)testcmp);
+    mu_assert(rc == 0, "sort failed");
+    mu_assert(is_sorted(words), "didn't sort it");
 
     DArray_destroy(words);
+
     return NULL;
+}
+
+char *test_qsort()
+{
+    return run_sort_test(DArray_qsort, "qsort");
 }
 
 char *test_heapsort()
 {
-    DArray *words = create_words();
-
-    DArray_heapsort(words, (DArray_compare)testcmp);
-    mu_assert(is_sorted(words), "heapsort failed");
-
-    DArray_destroy(words);
-    return NULL;
+    return run_sort_test(DArray_heapsort, "heapsort");
 }
 
 char *test_mergesort()
 {
-    DArray *words = create_words();
-
-    DArray_mergesort(words, (DArray_compare)testcmp);
-    mu_assert(is_sorted(words), "mergesort failed");
-
-    DArray_destroy(words);
-    return NULL;
+    return run_sort_test(DArray_mergesort, "mergesort");
 }
 
 

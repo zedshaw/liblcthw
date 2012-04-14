@@ -10,7 +10,7 @@ static int default_compare(void *a, void *b)
 }
 
 /** 
- * Simple Bob Jenkin's hash algorithm taken from the
+ * Simple Bob Jenkins's hash algorithm taken from the
  * wikipedia description.
  */
 static uint32_t default_hash(void *a)
@@ -62,7 +62,6 @@ void Hashmap_destroy(Hashmap *map)
     int i = 0;
     int j = 0;
 
-    // TODO: pack up this double-for-loop pattern into a macro somehow
     if(map) {
         if(map->buckets) {
             for(i = 0; i < DArray_count(map->buckets); i++) {
@@ -131,7 +130,6 @@ int Hashmap_set(Hashmap *map, void *key, void *data)
     HashmapNode *node = Hashmap_node_create(hash, key, data);
     check_mem(node);
 
-    // TODO: do sorting on the darray to make finding faster by the hash+key
     DArray_push(bucket, node);
 
     return 0;

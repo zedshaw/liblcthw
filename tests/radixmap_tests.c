@@ -17,19 +17,6 @@ error:
     return 0;
 }
 
-static int push_random_values(RadixMap *map)
-{
-    size_t i = 0;
-    for(i = 0; i < map->max - 1; i++) {
-        uint32_t value = (uint32_t)(rand () | (rand () << 16));
-        uint32_t key = RadixMap_push(map, value);
-        check(key != UINT32_MAX, "Got an invalid return.");
-    }
-    return 1;
-error:
-    return 0;
-}
-
 static int check_order(RadixMap *map)
 {
     RMElement d1, d2;
@@ -84,18 +71,6 @@ static char *test_operations()
     mu_assert(test_search(map), "Failed the search test.");
     mu_assert(check_order(map), "RadixMap didn't stay sorted after search.");
 
-    RadixMap_destroy(map);
-
-    map = RadixMap_create(N);
-    mu_assert(map != NULL, "Failed to make the map.");
-
-    debug("PUSHING VALUES");
-    mu_assert(push_random_values(map), "Didn't push random values.");
-    debug("VALUES PUSHED!");
-
-    mu_assert(check_order(map), "Map wasn't sorted after pushes.");
-
-    debug("DOING DELETES");
     while(map->end > 0) {
         RMElement *el = RadixMap_find(map, map->contents[map->end / 2].data.key);
         mu_assert(el != NULL, "Should get a result.");
@@ -115,73 +90,12 @@ static char *test_operations()
 }
 
 
-static char *test_simulate()
-{
-   uint32_t fd = (uint32_t)(rand() | (rand() << 16));
-   int i = 0;
-   size_t key = 0;
-   int connects = 0, disconnects = 0, activities = 0;
-   RMElement *el = NULL;
-   RadixMap *map = RadixMap_create(500);
-   // start the counter at just near max to test that out
-   map->counter = UINT32_MAX - 100;
-
-   debug("COUNTER: %u", map->counter);
-
-   for(i = 0; i < 10; i++) {
-       // seed it up
-       RadixMap_push(map, fd++);
-   }
-
-   debug("ENTERING LOOP");
-   for(i = 0; i < 10000; i++) {
-       switch((rand() + 1) % 4) {
-           case 0:
-               // connect, so add it on
-               RadixMap_push(map, fd++);
-               connects++;
-               break;
-           case 1:
-               // disconnect, so remove
-               if(map->end > 0) {
-                   key = (rand() + 1) % map->end;
-                   el = &map->contents[key];
-                   el = RadixMap_find(map, el->data.key);
-                   mu_assert(el != NULL, "Failed to find the key.");
-                   RadixMap_delete(map, el);
-               }
-               disconnects++;
-               break;
-
-           default:
-               // activity so find for doing stuff
-               if(map->end > 0) {
-                   key = (rand() + 1) % map->end;
-                   el = &map->contents[key];
-                   el = RadixMap_find(map, el->data.key);
-                   mu_assert(el != NULL, "Failed to find the key.");
-               }
-               activities++;
-               break;
-       }
-
-       if(map->end == 0) {
-           // make a new connect if we're empty
-           RadixMap_push(map, fd++);
-       }
-   }
-
-   RadixMap_destroy(map);
-   return NULL;
-}
-
 char *all_tests() 
 {
     mu_suite_start();
     srand(time(NULL));
 
     mu_run_test(test_operations);
-    mu_run_test(test_simulate);
 
     return NULL;
 }

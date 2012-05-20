@@ -11,6 +11,11 @@
 #define debug(M, ...) fprintf(stderr, "DEBUG %s:%d: " M "\n", __FILE__, __LINE__, ##__VA_ARGS__)
 #endif
 
+#ifdef NDEBUG
+#define debug_b(B)
+#else
+#define debug_b(B) B()
+#endif
 
 // do not try to be smart and make this go away on NDEBUG, the _debug
 // here means that it just doesn't print a message, it still does the

@@ -44,11 +44,13 @@ void List_push(List *list, void *value)
     if(list->last == NULL) {
         list->first = node;
         list->last = node;
+        node->prev = NULL;
     } else {
         list->last->next = node;
         node->prev = list->last;
         list->last = node;
     }
+    node->next = NULL;
 
     list->count++;
 
@@ -72,11 +74,13 @@ void List_shift(List *list, void *value)
     if(list->first == NULL) {
         list->first = node;
         list->last = node;
+        node->next = NULL;
     } else {
         node->next = list->first;
         list->first->prev = node;
         list->first = node;
     }
+    node->prev = NULL;
 
     list->count++;
 
@@ -102,8 +106,10 @@ void *List_remove(List *list, ListNode *node)
         list->last = NULL;
     } else if(node == list->first) {
         list->first = node->next;
+        list->first->prev = NULL;
     } else if (node == list->last) {
         list->last = node->prev;
+        list->last->next = NULL;
     } else {
         ListNode *after = node->next;
         ListNode *before = node->prev;

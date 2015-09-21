@@ -77,6 +77,7 @@ int gen_keys(DArray * keys, int num_keys)
 
     bsclose(stream);
     fclose(urand);
+    bdestroy(key);
     return 0;
 
 error:

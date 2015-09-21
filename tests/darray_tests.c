@@ -11,7 +11,8 @@ char *test_create()
     mu_assert(array != NULL, "DArray_create failed.");
     mu_assert(array->contents != NULL, "contents are wrong in darray");
     mu_assert(array->end == 0, "end isn't at the right spot");
-    mu_assert(array->element_size == sizeof(int), "element size is wrong.");
+    mu_assert(array->element_size == sizeof(int),
+            "element size is wrong.");
     mu_assert(array->max == 100, "wrong max length on initial size");
 
     return NULL;
@@ -72,13 +73,16 @@ char *test_expand_contract()
 {
     int old_max = array->max;
     DArray_expand(array);
-    mu_assert((unsigned int)array->max == old_max + array->expand_rate, "Wrong size after expand.");
+    mu_assert((unsigned int)array->max == old_max + array->expand_rate,
+            "Wrong size after expand.");
 
     DArray_contract(array);
-    mu_assert((unsigned int)array->max == array->expand_rate + 1, "Should stay at the expand_rate at least.");
+    mu_assert((unsigned int)array->max == array->expand_rate + 1,
+            "Should stay at the expand_rate at least.");
 
     DArray_contract(array);
-    mu_assert((unsigned int)array->max == array->expand_rate + 1, "Should stay at the expand_rate at least.");
+    mu_assert((unsigned int)array->max == array->expand_rate + 1,
+            "Should stay at the expand_rate at least.");
 
     return NULL;
 }
@@ -86,7 +90,7 @@ char *test_expand_contract()
 char *test_push_pop()
 {
     int i = 0;
-    for(i = 0; i < 1000; i++) {
+    for (i = 0; i < 1000; i++) {
         int *val = DArray_new(array);
         *val = i * 333;
         DArray_push(array, val);
@@ -94,7 +98,7 @@ char *test_push_pop()
 
     mu_assert(array->max == 1201, "Wrong max size.");
 
-    for(i = 999; i >= 0; i--) {
+    for (i = 999; i >= 0; i--) {
         int *val = DArray_pop(array);
         mu_assert(val != NULL, "Shouldn't get a NULL.");
         mu_assert(*val == i * 333, "Wrong value.");
@@ -104,8 +108,8 @@ char *test_push_pop()
     return NULL;
 }
 
-
-char * all_tests() {
+char *all_tests()
+{
     mu_suite_start();
 
     mu_run_test(test_create);
@@ -121,4 +125,3 @@ char * all_tests() {
 }
 
 RUN_TESTS(all_tests);
-

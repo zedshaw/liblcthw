@@ -2,6 +2,8 @@
 #include <lcthw/bstree.h>
 #include <assert.h>
 #include <lcthw/bstrlib.h>
+#include <stdlib.h>
+#include <time.h>
 
 BSTree *map = NULL;
 static int traverse_called = 0;
@@ -12,26 +14,24 @@ struct tagbstring expect1 = bsStatic("THE VALUE 1");
 struct tagbstring expect2 = bsStatic("THE VALUE 2");
 struct tagbstring expect3 = bsStatic("THE VALUE 3");
 
-static int traverse_good_cb(BSTreeNode *node)
+static int traverse_good_cb(BSTreeNode * node)
 {
-    debug("KEY: %s", bdata((bstring)node->key));
+    debug("KEY: %s", bdata((bstring) node->key));
     traverse_called++;
     return 0;
 }
 
-
-static int traverse_fail_cb(BSTreeNode *node)
+static int traverse_fail_cb(BSTreeNode * node)
 {
-    debug("KEY: %s", bdata((bstring)node->key));
+    debug("KEY: %s", bdata((bstring) node->key));
     traverse_called++;
 
-    if(traverse_called == 2) {
+    if (traverse_called == 2) {
         return 1;
     } else {
         return 0;
     }
 }
-
 
 char *test_create()
 {
@@ -47,7 +47,6 @@ char *test_destroy()
 
     return NULL;
 }
-
 
 char *test_get_set()
 {
@@ -85,28 +84,74 @@ char *test_traverse()
 
 char *test_delete()
 {
-    bstring deleted = (bstring)BSTree_delete(map, &test1);
+    bstring deleted = (bstring) BSTree_delete(map, &test1);
     mu_assert(deleted != NULL, "Got NULL on delete.");
     mu_assert(deleted == &expect1, "Should get test1");
     bstring result = BSTree_get(map, &test1);
     mu_assert(result == NULL, "Should delete.");
 
-    deleted = (bstring)BSTree_delete(map, &test2);
+    deleted = (bstring) BSTree_delete(map, &test1);
+    mu_assert(deleted == NULL, "Should get NULL on delete");
+
+    deleted = (bstring) BSTree_delete(map, &test2);
     mu_assert(deleted != NULL, "Got NULL on delete.");
     mu_assert(deleted == &expect2, "Should get test2");
     result = BSTree_get(map, &test2);
     mu_assert(result == NULL, "Should delete.");
 
-    deleted = (bstring)BSTree_delete(map, &test3);
+    deleted = (bstring) BSTree_delete(map, &test3);
     mu_assert(deleted != NULL, "Got NULL on delete.");
     mu_assert(deleted == &expect3, "Should get test3");
     result = BSTree_get(map, &test3);
     mu_assert(result == NULL, "Should delete.");
 
+    // test deleting non-existent stuff
+    deleted = (bstring) BSTree_delete(map, &test3);
+    mu_assert(deleted == NULL, "Should get NULL");
+
     return NULL;
 }
 
-char *all_tests() 
+char *test_fuzzing()
+{
+    BSTree *store = BSTree_create(NULL);
+    int i = 0;
+    int j = 0;
+    bstring numbers[100] = { NULL };
+    bstring data[100] = { NULL };
+    srand((unsigned int)time(NULL));
+
+    for (i = 0; i < 100; i++) {
+        int num = rand();
+        numbers[i] = bformat("%d", num);
+        data[i] = bformat("data %d", num);
+        BSTree_set(store, numbers[i], data[i]);
+    }
+
+    for (i = 0; i < 100; i++) {
+        bstring value = BSTree_delete(store, numbers[i]);
+        mu_assert(value == data[i],
+                "Failed to delete the right number.");
+
+        mu_assert(BSTree_delete(store, numbers[i]) == NULL,
+                "Should get nothing.");
+
+        for (j = i + 1; j < 99 - i; j++) {
+            bstring value = BSTree_get(store, numbers[j]);
+            mu_assert(value == data[j],
+                    "Failed to get the right number.");
+        }
+
+        bdestroy(value);
+        bdestroy(numbers[i]);
+    }
+
+    BSTree_destroy(store);
+
+    return NULL;
+}
+
+char *all_tests()
 {
     mu_suite_start();
 
@@ -115,9 +160,9 @@ char *all_tests()
     mu_run_test(test_traverse);
     mu_run_test(test_delete);
     mu_run_test(test_destroy);
+    mu_run_test(test_fuzzing);
 
     return NULL;
 }
 
 RUN_TESTS(all_tests);
-

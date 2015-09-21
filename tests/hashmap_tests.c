@@ -12,26 +12,24 @@ struct tagbstring expect1 = bsStatic("THE VALUE 1");
 struct tagbstring expect2 = bsStatic("THE VALUE 2");
 struct tagbstring expect3 = bsStatic("THE VALUE 3");
 
-static int traverse_good_cb(HashmapNode *node)
+static int traverse_good_cb(HashmapNode * node)
 {
-    debug("KEY: %s", bdata((bstring)node->key));
+    debug("KEY: %s", bdata((bstring) node->key));
     traverse_called++;
     return 0;
 }
 
-
-static int traverse_fail_cb(HashmapNode *node)
+static int traverse_fail_cb(HashmapNode * node)
 {
-    debug("KEY: %s", bdata((bstring)node->key));
+    debug("KEY: %s", bdata((bstring) node->key));
     traverse_called++;
 
-    if(traverse_called == 2) {
+    if (traverse_called == 2) {
         return 1;
     } else {
         return 0;
     }
 }
-
 
 char *test_create()
 {
@@ -47,7 +45,6 @@ char *test_destroy()
 
     return NULL;
 }
-
 
 char *test_get_set()
 {
@@ -85,19 +82,19 @@ char *test_traverse()
 
 char *test_delete()
 {
-    bstring deleted = (bstring)Hashmap_delete(map, &test1);
+    bstring deleted = (bstring) Hashmap_delete(map, &test1);
     mu_assert(deleted != NULL, "Got NULL on delete.");
     mu_assert(deleted == &expect1, "Should get test1");
     bstring result = Hashmap_get(map, &test1);
     mu_assert(result == NULL, "Should delete.");
 
-    deleted = (bstring)Hashmap_delete(map, &test2);
+    deleted = (bstring) Hashmap_delete(map, &test2);
     mu_assert(deleted != NULL, "Got NULL on delete.");
     mu_assert(deleted == &expect2, "Should get test2");
     result = Hashmap_get(map, &test2);
     mu_assert(result == NULL, "Should delete.");
 
-    deleted = (bstring)Hashmap_delete(map, &test3);
+    deleted = (bstring) Hashmap_delete(map, &test3);
     mu_assert(deleted != NULL, "Got NULL on delete.");
     mu_assert(deleted == &expect3, "Should get test3");
     result = Hashmap_get(map, &test3);
@@ -106,7 +103,7 @@ char *test_delete()
     return NULL;
 }
 
-char *all_tests() 
+char *all_tests()
 {
     mu_suite_start();
 
@@ -120,4 +117,3 @@ char *all_tests()
 }
 
 RUN_TESTS(all_tests);
-

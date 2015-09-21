@@ -53,22 +53,22 @@ char *test_djb()
 #define BUCKETS 100
 #define BUFFER_LEN 20
 #define NUM_KEYS BUCKETS * 1000
-enum { ALGO_FNV1A, ALGO_ADLER32, ALGO_DJB};
+enum { ALGO_FNV1A, ALGO_ADLER32, ALGO_DJB };
 
-int gen_keys(DArray *keys, int num_keys)
+int gen_keys(DArray * keys, int num_keys)
 {
     int i = 0;
     FILE *urand = fopen("/dev/urandom", "r");
     check(urand != NULL, "Failed to open /dev/urandom");
 
-    struct bStream *stream = bsopen((bNread)fread, urand);
+    struct bStream *stream = bsopen((bNread) fread, urand);
     check(stream != NULL, "Failed to open /dev/urandom");
 
     bstring key = bfromcstr("");
     int rc = 0;
 
     // FNV1a histogram
-    for(i = 0; i < num_keys; i++) {
+    for (i = 0; i < num_keys; i++) {
         rc = bsread(key, stream, BUFFER_LEN);
         check(rc >= 0, "Failed to read from /dev/urandom.");
 
@@ -83,22 +83,23 @@ error:
     return -1;
 }
 
-void destroy_keys(DArray *keys)
+void destroy_keys(DArray * keys)
 {
     int i = 0;
-    for(i = 0; i < NUM_KEYS; i++) {
+    for (i = 0; i < NUM_KEYS; i++) {
         bdestroy(DArray_get(keys, i));
     }
 
     DArray_destroy(keys);
 }
 
-void fill_distribution(int *stats, DArray *keys, Hashmap_hash hash_func)
+void fill_distribution(int *stats, DArray * keys,
+        Hashmap_hash hash_func)
 {
     int i = 0;
     uint32_t hash = 0;
 
-    for(i = 0; i < DArray_count(keys); i++) {
+    for (i = 0; i < DArray_count(keys); i++) {
         hash = hash_func(DArray_get(keys, i));
         stats[hash % BUCKETS] += 1;
     }
@@ -108,10 +109,11 @@ void fill_distribution(int *stats, DArray *keys, Hashmap_hash hash_func)
 char *test_distribution()
 {
     int i = 0;
-    int stats[3][BUCKETS] = {{0}};
+    int stats[3][BUCKETS] = { {0} };
     DArray *keys = DArray_create(0, NUM_KEYS);
 
-    mu_assert(gen_keys(keys, NUM_KEYS) == 0, "Failed to generate random keys.");
+    mu_assert(gen_keys(keys, NUM_KEYS) == 0,
+            "Failed to generate random keys.");
 
     fill_distribution(stats[ALGO_FNV1A], keys, Hashmap_fnv1a_hash);
     fill_distribution(stats[ALGO_ADLER32], keys, Hashmap_adler32_hash);
@@ -119,11 +121,10 @@ char *test_distribution()
 
     fprintf(stderr, "FNV\tA32\tDJB\n");
 
-    for(i = 0; i < BUCKETS; i++) {
+    for (i = 0; i < BUCKETS; i++) {
         fprintf(stderr, "%d\t%d\t%d\n",
                 stats[ALGO_FNV1A][i],
-                stats[ALGO_ADLER32][i],
-                stats[ALGO_DJB][i]);
+                stats[ALGO_ADLER32][i], stats[ALGO_DJB][i]);
     }
 
     destroy_keys(keys);
@@ -131,7 +132,7 @@ char *test_distribution()
     return NULL;
 }
 
-char *all_tests() 
+char *all_tests()
 {
     mu_suite_start();
 
@@ -144,4 +145,3 @@ char *all_tests()
 }
 
 RUN_TESTS(all_tests);
-

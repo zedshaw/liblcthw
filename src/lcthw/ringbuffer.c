@@ -1,4 +1,5 @@
 #undef NDEBUG
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,76 +9,78 @@
 RingBuffer *RingBuffer_create(int length)
 {
     RingBuffer *buffer = calloc(1, sizeof(RingBuffer));
-    buffer->length  = length + 1;
+    buffer->length = length + 1;
     buffer->start = 0;
-    buffer->end   = 0;
+    buffer->end = 0;
     buffer->buffer = calloc(buffer->length, 1);
 
     return buffer;
 }
 
-void RingBuffer_destroy(RingBuffer *buffer)
+void RingBuffer_destroy(RingBuffer * buffer)
 {
-    if(buffer) {
+    if (buffer) {
         free(buffer->buffer);
         free(buffer);
     }
 }
 
-int RingBuffer_full(RingBuffer *buffer)
+int RingBuffer_write(RingBuffer * buffer, char *data, int length)
 {
-    return (buffer->end + 1) % buffer->length == buffer->start;
-}
-
-int RingBuffer_empty(RingBuffer *buffer)
-{
-    return buffer->end == buffer->start;
-}
-
-int RingBuffer_available_space(RingBuffer *buffer)
-{
-    return buffer->length - buffer->end - 1;
-}
-
-int RingBuffer_available_data(RingBuffer *buffer)
-{
-    return buffer->length - buffer->start - 1;
-}
-
-int RingBuffer_write(RingBuffer *buffer, char *data, int length)
-{
-    if(length > RingBuffer_available_space(buffer)) {
-        return -1;
+    if (RingBuffer_available_data(buffer) == 0) {
+        buffer->start = buffer->end = 0;
     }
 
-    void *result = memcpy(buffer->buffer + buffer->end, data, length);
+    check(length <= RingBuffer_available_space(buffer),
+            "Not enough space: %d request, %d available",
+            RingBuffer_available_data(buffer), length);
+
+    void *result = memcpy(RingBuffer_ends_at(buffer), data, length);
     check(result != NULL, "Failed to write data into buffer.");
 
-    buffer->end = (buffer->end + length) % buffer->length;
-
-    if (buffer->end == buffer->start) {
-        buffer->start = (buffer->start + length) % buffer->length;
-    }
+    RingBuffer_commit_write(buffer, length);
 
     return length;
 error:
     return -1;
 }
 
-int RingBuffer_read(RingBuffer *buffer, char *target, int amount)
+int RingBuffer_read(RingBuffer * buffer, char *target, int amount)
 {
-    if(amount > RingBuffer_available_data(buffer)) {
-        debug("Available is: %d, amount: %d", RingBuffer_available_space(buffer), amount);
-        return -1;
-    }
+    check_debug(amount <= RingBuffer_available_data(buffer),
+            "Not enough in the buffer: has %d, needs %d",
+            RingBuffer_available_data(buffer), amount);
 
-    void *result = memcpy(target, buffer->buffer + buffer->start, amount);
+    void *result = memcpy(target, RingBuffer_starts_at(buffer), amount);
     check(result != NULL, "Failed to write buffer into data.");
 
-    buffer->start = (buffer->start + amount) % buffer->length;
+    RingBuffer_commit_read(buffer, amount);
+
+    if (buffer->end == buffer->start) {
+        buffer->start = buffer->end = 0;
+    }
 
     return amount;
 error:
     return -1;
 }
 
+bstring RingBuffer_gets(RingBuffer * buffer, int amount)
+{
+    check(amount > 0, "Need more than 0 for gets, you gave: %d ",
+            amount);
+    check_debug(amount <= RingBuffer_available_data(buffer),
+            "Not enough in the buffer.");
+
+    bstring result = blk2bstr(RingBuffer_starts_at(buffer), amount);
+    check(result != NULL, "Failed to create gets result.");
+    check(blength(result) == amount, "Wrong result length.");
+
+    RingBuffer_commit_read(buffer, amount);
+    assert(RingBuffer_available_data(buffer) >= 0
+            && "Error in read commit.");
+
+    return result;
+error:
+    return NULL;
+}

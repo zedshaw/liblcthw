@@ -3,9 +3,9 @@
 #include <assert.h>
 
 static Stack *stack = NULL;
-char *tests[] = {"test1 data", "test2 data", "test3 data"};
-#define NUM_TESTS 3
+char *tests[] = { "test1 data", "test2 data", "test3 data" };
 
+#define NUM_TESTS 3
 
 char *test_create()
 {
@@ -26,7 +26,7 @@ char *test_destroy()
 char *test_push_pop()
 {
     int i = 0;
-    for(i = 0; i < NUM_TESTS; i++) {
+    for (i = 0; i < NUM_TESTS; i++) {
         Stack_push(stack, tests[i]);
         mu_assert(Stack_peek(stack) == tests[i], "Wrong next value.");
     }
@@ -37,7 +37,7 @@ char *test_push_pop()
         debug("VAL: %s", (char *)cur->value);
     }
 
-    for(i = NUM_TESTS - 1; i >= 0; i--) {
+    for (i = NUM_TESTS - 1; i >= 0; i--) {
         char *val = Stack_pop(stack);
         mu_assert(val == tests[i], "Wrong value on pop.");
     }
@@ -47,7 +47,8 @@ char *test_push_pop()
     return NULL;
 }
 
-char *all_tests() {
+char *all_tests()
+{
     mu_suite_start();
 
     mu_run_test(test_create);
@@ -58,4 +59,3 @@ char *all_tests() {
 }
 
 RUN_TESTS(all_tests);
-

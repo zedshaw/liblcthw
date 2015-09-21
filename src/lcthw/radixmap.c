@@ -1,6 +1,6 @@
 /*
-* Based on code by Andre Reinald then heavily modified by Zed A. Shaw.
-*/
+ * Based on code by Andre Reinald then heavily modified by Zed A. Shaw.
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,21 +27,21 @@ error:
     return NULL;
 }
 
-void RadixMap_destroy(RadixMap *map)
+void RadixMap_destroy(RadixMap * map)
 {
-    if(map) {
+    if (map) {
         free(map->contents);
         free(map->temp);
         free(map);
     }
 }
 
-
 #define ByteOf(x,y) (((uint8_t *)x)[(y)])
 
-static inline void radix_sort(short offset, uint64_t max, uint64_t *source, uint64_t *dest)
+static inline void radix_sort(short offset, uint64_t max,
+        uint64_t * source, uint64_t * dest)
 {
-    uint64_t count[256] = {0};
+    uint64_t count[256] = { 0 };
     uint64_t *cp = NULL;
     uint64_t *sp = NULL;
     uint64_t *end = NULL;
@@ -53,7 +53,8 @@ static inline void radix_sort(short offset, uint64_t max, uint64_t *source, uint
         count[ByteOf(sp, offset)]++;
     }
 
-    // transform count into index by summing elements and storing into same array
+    // transform count into index by summing
+    // elements and storing into same array
     for (s = 0, cp = count, end = count + 256; cp < end; cp++) {
         c = *cp;
         *cp = s;
@@ -68,7 +69,7 @@ static inline void radix_sort(short offset, uint64_t max, uint64_t *source, uint
     }
 }
 
-void RadixMap_sort(RadixMap *map)
+void RadixMap_sort(RadixMap * map)
 {
     uint64_t *source = &map->contents[0].raw;
     uint64_t *temp = &map->temp[0].raw;
@@ -79,14 +80,14 @@ void RadixMap_sort(RadixMap *map)
     radix_sort(3, map->end, temp, source);
 }
 
-RMElement *RadixMap_find(RadixMap *map, uint32_t to_find)
+RMElement *RadixMap_find(RadixMap * map, uint32_t to_find)
 {
     int low = 0;
     int high = map->end - 1;
     RMElement *data = map->contents;
 
     while (low <= high) {
-        int middle = low + (high - low)/2;
+        int middle = low + (high - low) / 2;
         uint32_t key = data[middle].data.key;
 
         if (to_find < key) {
@@ -101,11 +102,11 @@ RMElement *RadixMap_find(RadixMap *map, uint32_t to_find)
     return NULL;
 }
 
-int RadixMap_add(RadixMap *map, uint32_t key, uint32_t value)
+int RadixMap_add(RadixMap * map, uint32_t key, uint32_t value)
 {
     check(key < UINT32_MAX, "Key can't be equal to UINT32_MAX.");
 
-    RMElement element = {.data = {.key = key, .value = value}};
+    RMElement element = {.data = {.key = key,.value = value} };
     check(map->end + 1 < map->max, "RadixMap is full.");
 
     map->contents[map->end++] = element;
@@ -118,14 +119,14 @@ error:
     return -1;
 }
 
-int RadixMap_delete(RadixMap *map, RMElement *el)
+int RadixMap_delete(RadixMap * map, RMElement * el)
 {
     check(map->end > 0, "There is nothing to delete.");
     check(el != NULL, "Can't delete a NULL element.");
 
     el->data.key = UINT32_MAX;
 
-    if(map->end > 1) {
+    if (map->end > 1) {
         // don't bother resorting a map of 1 length
         RadixMap_sort(map);
     }
@@ -136,5 +137,3 @@ int RadixMap_delete(RadixMap *map, RMElement *el)
 error:
     return -1;
 }
-
-

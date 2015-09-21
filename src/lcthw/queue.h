@@ -10,7 +10,7 @@ typedef List Queue;
 #define Queue_clear List_clear
 #define Queue_clear_destroy List_clear_destroy
 
-#define Queue_send List_shift
+#define Queue_send List_unshift
 #define Queue_recv List_pop
 
 #define Queue_count List_count

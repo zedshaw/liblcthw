@@ -181,15 +181,15 @@ extern int bsreada (bstring b, struct bStream * s, int n);
 extern int bsunread (struct bStream * s, const_bstring b);
 extern int bspeek (bstring r, const struct bStream * s);
 extern int bssplitscb (struct bStream * s, const_bstring splitStr, 
-	int (* cb) (void * parm, int ofs, const_bstring entry), void * parm);
+        int (* cb) (void * parm, int ofs, const_bstring entry), void * parm);
 extern int bssplitstrcb (struct bStream * s, const_bstring splitStr, 
-	int (* cb) (void * parm, int ofs, const_bstring entry), void * parm);
+        int (* cb) (void * parm, int ofs, const_bstring entry), void * parm);
 extern int bseof (const struct bStream * s);
 
 struct tagbstring {
-	int mlen;
-	int slen;
-	unsigned char * data;
+    int mlen;
+    int slen;
+    unsigned char * data;
 };
 
 /* Accessor macros */
@@ -238,7 +238,7 @@ struct tagbstring {
             bstrtmp_left = 0;                                                \
         }                                                                    \
         if (bstrtmp_len > bstrtmp_s->slen - bstrtmp_left)                    \
-            bstrtmp_len = bstrtmp_s->slen - bstrtmp_left;                    \
+        bstrtmp_len = bstrtmp_s->slen - bstrtmp_left;                    \
         if (bstrtmp_len <= 0) {                                              \
             (t).data = (unsigned char *)"";                                  \
             (t).slen = 0;                                                    \

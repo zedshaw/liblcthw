@@ -17,19 +17,16 @@ typedef struct RadixMap {
     RMElement *temp;
 } RadixMap;
 
-
 RadixMap *RadixMap_create(size_t max);
 
-void RadixMap_destroy(RadixMap *map);
+void RadixMap_destroy(RadixMap * map);
 
-void RadixMap_sort(RadixMap *map);
+void RadixMap_sort(RadixMap * map);
 
-RMElement *RadixMap_find(RadixMap *map, uint32_t key);
+RMElement *RadixMap_find(RadixMap * map, uint32_t key);
 
-int RadixMap_add(RadixMap *map, uint32_t key, uint32_t value);
+int RadixMap_add(RadixMap * map, uint32_t key, uint32_t value);
 
-int RadixMap_delete(RadixMap *map, RMElement *el);
-
-uint32_t RadixMap_push(RadixMap *map, uint32_t value);
+int RadixMap_delete(RadixMap * map, RMElement * el);
 
 #endif

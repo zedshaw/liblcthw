@@ -3,9 +3,9 @@
 #include <assert.h>
 
 static Queue *queue = NULL;
-char *tests[] = {"test1 data", "test2 data", "test3 data"};
-#define NUM_TESTS 3
+char *tests[] = { "test1 data", "test2 data", "test3 data" };
 
+#define NUM_TESTS 3
 
 char *test_create()
 {
@@ -26,7 +26,7 @@ char *test_destroy()
 char *test_send_recv()
 {
     int i = 0;
-    for(i = 0; i < NUM_TESTS; i++) {
+    for (i = 0; i < NUM_TESTS; i++) {
         Queue_send(queue, tests[i]);
         mu_assert(Queue_peek(queue) == tests[0], "Wrong next value.");
     }
@@ -37,7 +37,7 @@ char *test_send_recv()
         debug("VAL: %s", (char *)cur->value);
     }
 
-    for(i = 0; i < NUM_TESTS; i++) {
+    for (i = 0; i < NUM_TESTS; i++) {
         char *val = Queue_recv(queue);
         mu_assert(val == tests[i], "Wrong value on recv.");
     }
@@ -47,7 +47,8 @@ char *test_send_recv()
     return NULL;
 }
 
-char *all_tests() {
+char *all_tests()
+{
     mu_suite_start();
 
     mu_run_test(test_create);
@@ -58,4 +59,3 @@ char *all_tests() {
 }
 
 RUN_TESTS(all_tests);
-

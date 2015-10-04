@@ -29,7 +29,7 @@ int RingBuffer_available_space(RingBuffer * buffer);
 bstring RingBuffer_gets(RingBuffer * buffer, int amount);
 
 #define RingBuffer_available_data(B) (\
-        ((B)->end + 1) % (B)->length - (B)->start - 1)
+        (B)->end % (B)->length - (B)->start)
 
 #define RingBuffer_available_space(B) (\
         (B)->length - (B)->end - 1)

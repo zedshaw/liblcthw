@@ -59,6 +59,8 @@ inline List *List_merge(List * left, List * right, List_compare cmp)
 
 List *List_merge_sort(List * list, List_compare cmp)
 {
+    List *result = NULL;
+
     if (List_count(list) <= 1) {
         return list;
     }

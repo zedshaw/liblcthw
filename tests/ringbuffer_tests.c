@@ -69,6 +69,7 @@ char *test_read_write()
     mu_assert(data, "Didn't get any bstring from gets.");
     mu_assert(bisstemeqblk(data, "llo Again", 9),
             "Wrong get_all result.");
+    bdestroy(data);
 
     return NULL;
 }

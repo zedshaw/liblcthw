@@ -31,7 +31,15 @@ char *test_read_write()
     mu_assert(RingBuffer_available_space(buffer) == 100,
             "Should have 100 space.");
 
-    int rc = RingBuffer_write(buffer, "hello", sizeof("hello"));
+    int rc = RingBuffer_write(buffer, data, 100);
+    mu_assert(rc == 100, "Failed to write full buffer.");
+    mu_assert(RingBuffer_available_space(buffer) == 0, "Invalid available space.");
+    mu_assert(RingBuffer_available_data(buffer) == 100, "Invalid available data.");
+    mu_assert(RingBuffer_full(buffer), "Buffer should be full.");
+    mu_assert(!RingBuffer_empty(buffer), "Should not be empty.");
+    RingBuffer_clear(buffer);
+
+    rc = RingBuffer_write(buffer, "hello", sizeof("hello"));
     mu_assert(rc == sizeof("hello"), "Failed to write hello.");
     mu_assert(RingBuffer_available_data(buffer) == 6,
             "Should have 6 data.");

@@ -10,13 +10,13 @@
 
 RadixMap *RadixMap_create(size_t max)
 {
-    RadixMap *map = calloc(sizeof(RadixMap), 1);
+    RadixMap *map = calloc(1,sizeof(RadixMap));
     check_mem(map);
 
-    map->contents = calloc(sizeof(RMElement), max + 1);
+    map->contents = calloc(max + 1, sizeof(RMElement));
     check_mem(map->contents);
 
-    map->temp = calloc(sizeof(RMElement), max + 1);
+    map->temp = calloc(max + 1 ,sizeof(RMElement));
     check_mem(map->temp);
 
     map->max = max;

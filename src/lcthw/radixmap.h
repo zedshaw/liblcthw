@@ -1,4 +1,5 @@
 #ifndef _radixmap_h
+#define _radixmap_h
 #include <stdint.h>
 
 typedef union RMElement {

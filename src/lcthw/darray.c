@@ -33,6 +33,7 @@ void DArray_clear(DArray * array)
             }
         }
     }
+    array->end = 0;
 }
 
 static inline int DArray_resize(DArray * array, size_t newsize)

@@ -94,16 +94,22 @@ char *test_push_pop()
         int *val = DArray_new(array);
         *val = i * 333;
         DArray_push(array, val);
+        mu_assert(((array->max - 1) % array->expand_rate) == 0,
+                  "Wrong max size.");
     }
 
     mu_assert(array->max == 1201, "Wrong max size.");
 
     for (i = 999; i >= 0; i--) {
         int *val = DArray_pop(array);
+        mu_assert(((array->max - 1) % array->expand_rate) == 0,
+                  "Wrong max size.");
         mu_assert(val != NULL, "Shouldn't get a NULL.");
         mu_assert(*val == i * 333, "Wrong value.");
         DArray_free(val);
     }
+
+    mu_assert(array->max == 301, "Wrong max size.");
 
     return NULL;
 }

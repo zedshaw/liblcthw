@@ -109,8 +109,8 @@ void *DArray_pop(DArray * array)
     void *el = DArray_remove(array, array->end - 1);
     array->end--;
 
-    if (DArray_end(array) > (int)array->expand_rate
-            && DArray_end(array) % array->expand_rate) {
+    if (DArray_end(array) >= (int)array->expand_rate
+            && (DArray_end(array) % array->expand_rate) == 0) {
         DArray_contract(array);
     }
 

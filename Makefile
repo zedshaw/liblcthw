@@ -1,4 +1,6 @@
-CFLAGS=-g -O2 -Wall -Wextra -Isrc -rdynamic -DNDEBUG $(OPTFLAGS)
+CDEFS=-DNDEBUG -D_GNU_SOURCE -D_XOPEN_SOURCE=700
+CFLAGS=-g -O2 -Wall -Wextra -Isrc -rdynamic $(CDEFS) $(OPTFLAGS)
+OPTLIBS=-lm
 LDFLAGS=$(OPTLIBS)
 PREFIX?=/usr/local
 
@@ -13,7 +15,7 @@ TARGET=build/liblcthw.a
 # The Target Build
 all: $(TARGET) tests
 
-dev: CFLAGS=-g -Wall -Isrc -Wall -Wextra $(OPTFLAGS)
+dev: CFLAGS=-g -Wall -Isrc -Wall -Wextra -D_GNU_SOURCE -D_XOPEN_SOURCE=700 $(OPTFLAGS)
 dev: all
 
 $(TARGET): CFLAGS += -fPIC

@@ -37,6 +37,8 @@ flags = [
     '-x',
     'c',
     '-DNDEBUG',
+    '-D_GNU_SOURCE',
+    '-D_XOPEN_SOURCE=700',
     '-Isrc',
     '-Wall',
     '-Wextra',

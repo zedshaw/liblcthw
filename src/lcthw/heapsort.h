@@ -5,6 +5,8 @@
 #include <lcthw/sort.h>
 
 /* prototypes */
-int heapsort(void *array, size_t nmem, size_t size, compare_t compare);
+int heapsort(void * const array, const size_t nmem, const size_t size, compare_t compare);
+int __heapsort(void * const array, const size_t nmem, const size_t size, compare_t compare,
+               void (*debug_print)(void * const array, const size_t size, const void *temp));
 
 #endif

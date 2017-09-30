@@ -1,4 +1,5 @@
 CDEFS=-DNDEBUG -D_GNU_SOURCE -D_XOPEN_SOURCE=700
+CDEVDEFS=-DEXTRA_DEBUG -D_GNU_SOURCE -D_XOPEN_SOURCE=700
 CFLAGS=-g -O2 -Wall -Wextra -Isrc -rdynamic $(CDEFS) $(OPTFLAGS)
 OPTLIBS=-lm
 LDFLAGS=$(OPTLIBS)
@@ -15,7 +16,7 @@ TARGET=build/liblcthw.a
 # The Target Build
 all: $(TARGET) tests
 
-dev: CFLAGS=-g -Wall -Isrc -Wall -Wextra -D_GNU_SOURCE -D_XOPEN_SOURCE=700 $(OPTFLAGS)
+dev: CFLAGS=-g -Wall -Isrc -Wall -Wextra $(CDEVDEFS) $(OPTFLAGS)
 dev: all
 
 $(TARGET): CFLAGS += -fPIC
@@ -30,7 +31,7 @@ build:
 # The Unit Tests
 .PHONY: tests
 tests: LDLIBS += $(TARGET)
-tests: $(TESTS)
+tests: $(TARGET) $(TESTS) 
 	sh ./tests/runtests.sh
 
 valgrind:

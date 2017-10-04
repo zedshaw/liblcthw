@@ -190,7 +190,7 @@ error:
 }
 /**
  * Moves memory of a specified size from one location to another and
- * initialized the from location.
+ * initializes the from location.
  *
  * @param member_size size_t the amount of memory being moved
  * @param to void * pointer to the destination
@@ -200,7 +200,7 @@ error:
  * Remark: this function has no way of checking the validity of the
  * memory addresses. This is the callers responsibility.
  */
-int move(size_t member_size, void *to, void *from)
+int heap_move_mem(size_t member_size, void *to, void *from)
 {
     check(member_size != 0, "Member size can not be zero.");
     check(to != NULL, "Cannot copy memory to NULL.");
@@ -354,8 +354,8 @@ phase_t new_hire(void * array, size_t member_size, size_t nmem, size_t vacancy_p
     check(vacancy_pos > 0, "Vacancy position can not be zero");
     check(temp != NULL, "temp can not be NULL.");
 
-    int r = move(member_size, temp, locate(array, member_size, nmem, vacancy_pos));
-    check(r == 0, "Move from vacancy_pos %lu to temp failed.", vacancy_pos);
+    int r = heap_move_mem(member_size, temp, locate(array, member_size, nmem, vacancy_pos));
+    check(r == 0, "heap_move_mem from vacancy_pos %lu to temp failed.", vacancy_pos);
 
     phase_t phase = vacancy_pos > 1 ? HIRING_PHASE : RETIREMENT_PHASE;
     return phase;
@@ -388,14 +388,14 @@ phase_t retire_boss(void *array, size_t member_size,
         return SORT_FINISHED_PHASE;
     }
     /* Clear a space at the end of the sub array */
-    int r = move(member_size, temp, locate(array, member_size, nmem, heap_size));
-    check(r == 0, "Move from last position %lu to from failed.", heap_size);
+    int r = heap_move_mem(member_size, temp, locate(array, member_size, nmem, heap_size));
+    check(r == 0, "heap_move_mem from last position %lu to from failed.", heap_size);
 
     /* Retire the top of the heap into the last space we just created. */
-    r = move(member_size,
-             locate(array, member_size, nmem, heap_size),
-             locate(array, member_size, nmem, 1));
-    check(r == 0, "Move from position 1 to end of heap %lu failed.", heap_size);
+    r = heap_move_mem(member_size,
+                      locate(array, member_size, nmem, heap_size),
+                      locate(array, member_size, nmem, 1));
+    check(r == 0, "heap_move_mem from position 1 to end of heap %lu failed.", heap_size);
 
     return RETIREMENT_PHASE;
 error:
@@ -442,14 +442,14 @@ int heapify(void *array, size_t member_size, size_t heap_size,
             break;
         }
         /* temp is smaller, promote the largest child and set the new promotion position */
-        int r = move(member_size,
-                     locate(array, member_size, heap_size, promotion_pos),
-                     locate(array, member_size, heap_size, largest_child));
-        check(r == 0, "Memory move during demotion failed.");
+        int r = heap_move_mem(member_size,
+                              locate(array, member_size, heap_size, promotion_pos),
+                              locate(array, member_size, heap_size, largest_child));
+        check(r == 0, "Memory heap_move_mem during demotion failed.");
         promotion_pos = largest_child;
     }
     /* Put temp in its place */
-    int r = move(member_size, locate(array, member_size, heap_size, promotion_pos), temp);
+    int r = heap_move_mem(member_size, locate(array, member_size, heap_size, promotion_pos), temp);
     check(r == 0, "Memory copy of temp into place failed.");
 
     return 0;

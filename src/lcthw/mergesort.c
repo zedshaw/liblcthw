@@ -75,53 +75,46 @@ int __mergesort(void *array, size_t nmem, size_t member_size, compare_t compare,
                 void (*print)(void * const array, const size_t nmem, const void *temp)
                )
 {
-    (void)(print);
-
     char *scratch = NULL;
 
     check(array != NULL, "Input array cannot be NULL");
     check(compare != NULL, "Compare function cannot be NULL");
-
-    size_t nparts;			/** The number of full partitions. */
-    size_t npaired_parts;	/** The number of parts to be compared of equal size */
-    _Bool has_single_part;		/** The last odd part if present */
-    size_t part_len;		/** The length of a partition */
-    size_t tail_len;		/** The length of the last partition */
 
     /** Create a scratch area of equal size to the array */
     scratch = malloc(nmem * member_size);
     errno = ENOMEM;
     check(scratch != NULL, "Error allocating scratch");
 
+    size_t nparts;			/** The number of full partitions. */
+    size_t npaired_parts;	/** The number of parts to be compared of equal size */
+    _Bool has_single_part;		/** The last odd part if present */
+    size_t tail_len;		/** The length of the last partition */
     /*
      * divide the array into nmem / n equal parts of n members where n doubles each run.
      */
-    for(size_t n=1; n<nmem; n<<=1)
+    for(size_t part_len=1; part_len<nmem; part_len<<=1)
     {
-        nparts = nmem / n;				/* Integer division: truncates */
+        nparts = nmem / part_len;				/* Integer division: truncates */
         npaired_parts = nparts / 2;
         has_single_part = nparts % 2;
-        part_len = n;					/* Yes, this is duplicate */
-        tail_len = nmem % n;
+        tail_len = nmem % part_len;
 
-#ifndef NDEBUG
-        /* useful for debugging sort */
-        printf("n = %lu, nparts = %zd, npaired_parts = %zd, "
-               "has_single_part = %s, part_len = %zd, tail_len = %zd.\n",
-               n, nparts, npaired_parts, has_single_part ? "true" : "false", part_len, tail_len);
-#endif
         /* merge the sets of partitions of equal size nmem / n */
         for (size_t i = 0; i < npaired_parts; i++)
         {
             size_t left_offset = 2*i*part_len;
             size_t right_offset = left_offset + part_len;
             int r = merge(array, nmem, member_size, scratch, compare,
-                          left_offset, part_len, right_offset, part_len, NULL);
+                          left_offset, part_len, right_offset, part_len, print);
             check(r == 0, "merge of 2 equal parts failed.");
         }
 
-        if (has_single_part == 1)
+        /* merge last 2 partitions if there are 2 partitions */
+        if (has_single_part == true)
         {
+            /* Remark: the very last run will always have a single partition,
+             * with or without a tail */
+
             /* Merge last 2 partitions: if tail is empty nothing happens. */
             size_t start_single_part = 2 * npaired_parts * part_len;
             size_t start_tail = start_single_part + part_len;
@@ -129,6 +122,8 @@ int __mergesort(void *array, size_t nmem, size_t member_size, compare_t compare,
                           start_single_part, part_len, start_tail, tail_len, print);
             check(r == 0, "Merge single part and tail failed.");
         }
+        if (print) print(array, nmem, 0);
+        if (print) print(scratch, nmem, 0);
     }
 
     /* Free the allocated array */
@@ -160,8 +155,6 @@ int merge(void *array, size_t nmem, size_t member_size, char *scratch, compare_t
           size_t left, size_t llen, size_t right, size_t rlen,
           void (*print)(void * const array, const size_t nmem, const void *temp))
 {
-    (void)(print);
-
     /* Check the input */
     errno = EINVAL;
     check(array != NULL, "Cannot merge a NULL array.");
@@ -196,65 +189,63 @@ int merge(void *array, size_t nmem, size_t member_size, char *scratch, compare_t
     /* Copy the subsequent partition members to the scratch array in one go */
     void *scratch_addr = scratch + left * member_size;
     void *array_addr = array + left * member_size;
-    memcpy(scratch_addr, array_addr, tot_len * member_size);
-    memset(array_addr, '\0', tot_len * member_size);
+    size_t chunk_len = tot_len * member_size;
+    memcpy(scratch_addr, array_addr, chunk_len);
+    memset(array_addr, '\0', chunk_len);
 
     /* Merge both array parts from the allocated array to the original array */
-    size_t i = left;
-    size_t j = left + llen;
-    size_t merge_pt = left;
-    while (merge_pt - left < tot_len)
+    size_t i = 0;
+    size_t j = llen;
+    size_t merge_pt = 0;
+    while (merge_pt < tot_len)
     {
-        check(i - left + j - left - llen  == merge_pt - left,
+        check(i + j - llen  == merge_pt,
               "Merge point somehow degraded: (i, j, merge_pt) = (%zd, %zd, %zd)."
               "\n(left, llen) = (%zd, %zd)",
               i, j, merge_pt, left, llen);
         if (print)
         {
-            printf("(left, llen, rlen) = (%zd, %zd, %zd)", left, llen, rlen);
-            printf("(i, j) = (%zd, %zd) ", i, j);
-            printf("(merge_pt) = (%zd)\n", merge_pt);
             printf("array  : ");
             print(array, nmem, NULL);
             printf("scratch: ");
             print(scratch, nmem, NULL);
         }
-        if (i - left < llen && j - left < tot_len)
+        if (i < llen && j < tot_len)
         {
             /* compare and move smallest to destination */
-            void *left_addr = scratch + i * member_size;
-            void *right_addr = scratch + j * member_size;
+            void *left_addr = scratch + (i + left) * member_size;
+            void *right_addr = scratch + (j + left) * member_size;
             if (compare(left_addr, right_addr) <= 0)
             {
-                int r = merge_move_mem(member_size, array+merge_pt*member_size,
-                                       scratch+i*member_size);
+                int r = merge_move_mem(member_size, array+(merge_pt + left)*member_size,
+                                       scratch+(i+left)*member_size);
                 check(r == 0, "merge_move_mem of memory chunk left partition failed.");
                 i++;
                 merge_pt++;
             }
             else
             {
-                int r = merge_move_mem(member_size, array+merge_pt*member_size,
-                                       scratch+j*member_size);
+                int r = merge_move_mem(member_size, array+(merge_pt+left)*member_size,
+                                       scratch+(j+left)*member_size);
                 check(r == 0, "merge_move_mem of memory chunk right partition failed.");
                 j++;
                 merge_pt++;
             }
         }
-        else if (i - left < llen)
+        else if (i < llen)
         {
             /* move left partition to destination */
-            int r = merge_move_mem(member_size, array+merge_pt*member_size,
-                                   scratch+i*member_size);
+            int r = merge_move_mem(member_size, array+(merge_pt+left)*member_size,
+                                   scratch+(i+left)*member_size);
             check(r == 0, "merge_move_mem of memory chunk left partition failed.");
             i++;
             merge_pt++;
         }
-        else if (j - left < tot_len)
+        else if (j < tot_len)
         {
             /* move right partition to destination */
-            int r = merge_move_mem(member_size, array+merge_pt*member_size,
-                                   scratch+j*member_size);
+            int r = merge_move_mem(member_size, array+(merge_pt+left)*member_size,
+                                   scratch+(j+left)*member_size);
             check(r == 0, "merge_move_mem of memory chunk right partition failed.");
             j++;
             merge_pt++;

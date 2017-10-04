@@ -16,10 +16,8 @@ typedef struct
 /* prototypes */
 int merge_move_mem(size_t member_size, void *to, void *from);
 int merge(void *array, size_t nmem, size_t member_size, char *scratch,
-          compare_t compare, size_t left, size_t llen, size_t right, size_t rlen);
-int __merge(void *array, size_t nmem, size_t member_size, char *scratch,
-            compare_t compare, size_t left, size_t llen, size_t right, size_t rlen,
-            void (*print)(void * const array, const size_t nmem, const void *temp));
+          compare_t compare, size_t left, size_t llen, size_t right, size_t rlen,
+          void (*print)(void * const array, const size_t nmem, const void *temp));
 
 /**
  * Moves memory of a specified size from one location to another and
@@ -117,44 +115,9 @@ int __mergesort(void *array, size_t nmem, size_t member_size, compare_t compare,
         {
             size_t left_offset = 2*i*part_len;
             size_t right_offset = left_offset + part_len;
-#ifdef NDEBUG
             int r = merge(array, nmem, member_size, scratch, compare,
-                          left_offset, part_len, right_offset, part_len);
-            check(r == 0,
-                  "merge failed. (array, nmem, member_size) = (%p, %zd, %zd)\n"
-                  "(scratch                 ) = (%p)\n"
-                  "(left_offset, part_len   ) = (%zd, %zd)\n"
-                  "(right_offset            ) = (%zd)\n",
-                  array, nmem, member_size, scratch, left_offset, part_len, right_offset);
-#else
-            if(print)
-            {
-                printf("-------------------\n");
-                printf("array before merge (left_offset, right_offset) = (%zd, %zd):\n",
-                       left_offset, right_offset);
-                printf("       real array:\t");
-                print(array, nmem, NULL);
-                printf("    scratch array:\t");
-                print(scratch, nmem, NULL);
-            }
-            int r = __merge(array, nmem, member_size, scratch, compare,
-                            left_offset, part_len, right_offset, part_len, print);
-            if(print)
-            {
-                printf("array after merge (left_offset, right_offset) = (%zd, %zd):\n",
-                       left_offset, right_offset);
-                printf("       real array:\t");
-                print(array, nmem, NULL);
-                printf("    scratch array:\t");
-                print(scratch, nmem, NULL);
-            }
-            check(r == 0,
-                  "__merge failed. (array, nmem, member_size) = (%p, %zd, %zd)\n"
-                  "(scratch                 ) = (%p)\n"
-                  "(left_offset, part_len   ) = (%zd, %zd)\n"
-                  "(right_offset            ) = (%zd)\n",
-                  array, nmem, member_size, scratch, left_offset, part_len, right_offset);
-#endif
+                          left_offset, part_len, right_offset, part_len, NULL);
+            check(r == 0, "merge of 2 equal parts failed.");
         }
 
         if (has_single_part == 1)
@@ -162,13 +125,9 @@ int __mergesort(void *array, size_t nmem, size_t member_size, compare_t compare,
             /* Merge last 2 partitions: if tail is empty nothing happens. */
             size_t start_single_part = 2 * npaired_parts * part_len;
             size_t start_tail = start_single_part + part_len;
-#ifdef NDEBUG
-            merge(array, nmem, member_size, scratch, compare,
-                  start_single_part, part_len, start_tail, tail_len);
-#else
-            __merge(array, nmem, member_size, scratch, compare,
-                    start_single_part, part_len, start_tail, tail_len, print);
-#endif
+            int r = merge(array, nmem, member_size, scratch, compare,
+                          start_single_part, part_len, start_tail, tail_len, print);
+            check(r == 0, "Merge single part and tail failed.");
         }
     }
 
@@ -197,17 +156,9 @@ error:
  *					The print function provided by caller: is allowed to be NULL.
  * @return zero if all is well, -1 if something went wrong.
  */
-int merge(void *array, size_t nmem, size_t member_size, char *scratch,
-          compare_t compare, size_t left, size_t llen, size_t right, size_t rlen)
-{
-    return __merge(array, nmem, member_size, scratch, compare, left, llen, right, rlen, NULL);
-}
-
-int __merge(void *array, size_t nmem, size_t member_size, char *scratch,
-            compare_t compare,
-            size_t left, size_t llen, size_t right, size_t rlen,
-            void (*print)(void * const array, const size_t nmem, const void *temp)
-           )
+int merge(void *array, size_t nmem, size_t member_size, char *scratch, compare_t compare,
+          size_t left, size_t llen, size_t right, size_t rlen,
+          void (*print)(void * const array, const size_t nmem, const void *temp))
 {
     (void)(print);
 

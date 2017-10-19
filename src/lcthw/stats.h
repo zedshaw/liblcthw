@@ -1,6 +1,8 @@
 #ifndef lcthw_stats_h
 #define lcthw_stats_h
 
+#include <math.h>
+
 typedef struct Stats {
     double sum;
     double sumsq;

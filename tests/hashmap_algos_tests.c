@@ -52,7 +52,7 @@ char *test_djb()
 
 #define BUCKETS 100
 #define BUFFER_LEN 20
-#define NUM_KEYS BUCKETS * 1000
+#define NUM_KEYS (BUCKETS * 1000)
 enum { ALGO_FNV1A, ALGO_ADLER32, ALGO_DJB };
 
 int gen_keys(DArray * keys, int num_keys)

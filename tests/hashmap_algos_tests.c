@@ -6,7 +6,7 @@
 
 struct tagbstring test1 = bsStatic("test data 1");
 struct tagbstring test2 = bsStatic("test data 2");
-struct tagbstring test3 = bsStatic("xest data 3");
+struct tagbstring test3 = bsStatic("test data 3");
 
 char *test_fnv1a()
 {

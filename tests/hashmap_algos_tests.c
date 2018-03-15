@@ -6,7 +6,7 @@
 
 struct tagbstring test1 = bsStatic("test data 1");
 struct tagbstring test2 = bsStatic("test data 2");
-struct tagbstring test3 = bsStatic("xest data 3");
+struct tagbstring test3 = bsStatic("test data 3");
 
 char *test_fnv1a()
 {
@@ -52,7 +52,7 @@ char *test_djb()
 
 #define BUCKETS 100
 #define BUFFER_LEN 20
-#define NUM_KEYS BUCKETS * 1000
+#define NUM_KEYS (BUCKETS * 1000)
 enum { ALGO_FNV1A, ALGO_ADLER32, ALGO_DJB };
 
 int gen_keys(DArray * keys, int num_keys)

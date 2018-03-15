@@ -10,6 +10,11 @@ TESTS=$(patsubst %.c,%,$(TEST_SRC))
 
 TARGET=build/liblcthw.a
 
+OS=$(shell lsb_release -si)
+ifeq ($(OS),Ubuntu)
+	LDLIBS=-llcthw -lbsd -L./build -lm
+endif
+
 # The Target Build
 all: $(TARGET) tests
 

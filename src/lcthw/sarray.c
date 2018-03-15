@@ -3,8 +3,7 @@
 #include <lcthw/dbg.h>
 #include <stdlib.h>
 
-
-int SuffixArray_compare(void *thunk, const void *a, const void *b)
+int SuffixArray_compare(const void *a, const void *b, void *thunk)
 {
     SuffixArray *sarry = thunk;
     int a_at = *(int *)a;
@@ -28,21 +27,29 @@ int SuffixArray_find_suffix(SuffixArray *sarry, char *data, int length)
     int cmp = 0;
     int mid = 0;
 
-    do {
+    do
+    {
         mid = (min + max) / 2;
         // BUG: wrong, need to use the minimum length
         cmp = strncmp(SuffixArray_substr(sarry, mid), data, length);
 
-        if(cmp < 0) {
+        if(cmp < 0)
+        {
             min = mid + 1;
-        } else {
+        }
+        else
+        {
             max = mid - 1;
         }
-    } while(cmp != 0 && min < max);
+    }
+    while(cmp != 0 && min < max);
 
-    if(cmp == 0) {
+    if(cmp == 0)
+    {
         return mid;
-    } else {
+    }
+    else
+    {
         return -1;
     }
 }
@@ -64,16 +71,18 @@ SuffixArray *SuffixArray_create(char *data, int length)
     check_mem(sarry->indices);
 
     int i = 0;
-    for(i = 0; i < length; i++) {
+    for(i = 0; i < length; i++)
+    {
         sarry->indices[i] = i;
     }
 
-    qsort_r(sarry->indices, length, sizeof(int), sarry, SuffixArray_compare);
+    qsort_r(sarry->indices, length, sizeof(int), SuffixArray_compare, sarry);
 
     return sarry;
 
 error:
-    if(sarry) {
+    if(sarry)
+    {
         SuffixArray_destroy(sarry);
     }
 
@@ -83,10 +92,10 @@ error:
 
 void SuffixArray_destroy(SuffixArray *sarry)
 {
-    if(sarry) {
+    if(sarry)
+    {
         free(sarry->source);
         free(sarry->indices);
         free(sarry);
     }
 }
-

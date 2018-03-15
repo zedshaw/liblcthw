@@ -3,12 +3,14 @@
 #include <math.h>
 
 const int NUM_SAMPLES = 10;
-double samples[] = {
+double samples[] =
+{
     6.1061334, 9.6783204, 1.2747090, 8.2395131, 0.3333483,
     6.9755066, 1.0626275, 7.6587523, 4.9382973, 9.5788115
 };
 
-Stats expect = {
+Stats expect =
+{
     .sumsq = 425.1641,
     .sum = 55.84602,
     .min = 0.333,
@@ -27,7 +29,8 @@ char *test_operations()
     Stats *st = Stats_create();
     mu_assert(st != NULL, "Failed to create stats.");
 
-    for (i = 0; i < NUM_SAMPLES; i++) {
+    for (i = 0; i < NUM_SAMPLES; i++)
+    {
         Stats_sample(st, samples[i]);
     }
 
@@ -40,7 +43,7 @@ char *test_operations()
     mu_assert(EQ(st->n, expect.n, 3), "max not valid");
     mu_assert(EQ(expect_mean, Stats_mean(st), 3), "mean not valid");
     mu_assert(EQ(expect_stddev, Stats_stddev(st), 3),
-            "stddev not valid");
+              "stddev not valid");
 
     return NULL;
 }
@@ -48,7 +51,7 @@ char *test_operations()
 char *test_recreate()
 {
     Stats *st = Stats_recreate(
-            expect.sum, expect.sumsq, expect.n, expect.min, expect.max);
+                    expect.sum, expect.sumsq, expect.n, expect.min, expect.max);
 
     mu_assert(st->sum == expect.sum, "sum not equal");
     mu_assert(st->sumsq == expect.sumsq, "sumsq not equal");
@@ -57,7 +60,7 @@ char *test_recreate()
     mu_assert(st->max == expect.max, "max not equal");
     mu_assert(EQ(expect_mean, Stats_mean(st), 3), "mean not valid");
     mu_assert(EQ(expect_stddev, Stats_stddev(st), 3),
-            "stddev not valid");
+              "stddev not valid");
 
     return NULL;
 }

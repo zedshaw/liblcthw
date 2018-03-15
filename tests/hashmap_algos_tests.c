@@ -59,17 +59,21 @@ int gen_keys(DArray * keys, int num_keys)
 {
     int i = 0;
     FILE *urand = fopen("/dev/urandom", "r");
-    check(urand != NULL, "Failed to open /dev/urandom");
+    struct bStream *stream = bsopen((bNread) fread, urand);
+
     int result = -1; // default to failure condition
     int rc = 0;
 
-    struct bStream *stream = bsopen((bNread) fread, urand);
-    check(stream != NULL, "Failed to open /dev/urandom");
-
     bstring key = bfromcstr("");
 
+    // Only do checks after declaration of urand, key and stream due to
+    // conditional closes in error label
+    check(urand != NULL, "Failed to open /dev/urandom");
+    check(stream != NULL, "Failed to open /dev/urandom");
+
     // FNV1a histogram
-    for (i = 0; i < num_keys; i++) {
+    for (i = 0; i < num_keys; i++)
+    {
         rc = bsread(key, stream, BUFFER_LEN);
         check(rc >= 0, "Failed to read from /dev/urandom.");
 
@@ -88,7 +92,8 @@ error: // fallthrough
 void destroy_keys(DArray * keys)
 {
     int i = 0;
-    for (i = 0; i < NUM_KEYS; i++) {
+    for (i = 0; i < NUM_KEYS; i++)
+    {
         bdestroy(DArray_get(keys, i));
     }
 
@@ -96,12 +101,13 @@ void destroy_keys(DArray * keys)
 }
 
 void fill_distribution(int *stats, DArray * keys,
-        Hashmap_hash hash_func)
+                       Hashmap_hash hash_func)
 {
     int i = 0;
     uint32_t hash = 0;
 
-    for (i = 0; i < DArray_count(keys); i++) {
+    for (i = 0; i < DArray_count(keys); i++)
+    {
         hash = hash_func(DArray_get(keys, i));
         stats[hash % BUCKETS] += 1;
     }
@@ -115,7 +121,7 @@ char *test_distribution()
     DArray *keys = DArray_create(0, NUM_KEYS);
 
     mu_assert(gen_keys(keys, NUM_KEYS) == 0,
-            "Failed to generate random keys.");
+              "Failed to generate random keys.");
 
     fill_distribution(stats[ALGO_FNV1A], keys, Hashmap_fnv1a_hash);
     fill_distribution(stats[ALGO_ADLER32], keys, Hashmap_adler32_hash);
@@ -123,7 +129,8 @@ char *test_distribution()
 
     fprintf(stderr, "FNV\tA32\tDJB\n");
 
-    for (i = 0; i < BUCKETS; i++) {
+    for (i = 0; i < BUCKETS; i++)
+    {
         fprintf(stderr, "%d\t%d\t%d\n",
                 stats[ALGO_FNV1A][i],
                 stats[ALGO_ADLER32][i], stats[ALGO_DJB][i]);

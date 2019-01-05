@@ -10,8 +10,8 @@ TESTS=$(patsubst %.c,%,$(TEST_SRC))
 
 TARGET=build/liblcthw.a
 
-OS=$(shell lsb_release -si)
-ifeq ($(OS),Ubuntu)
+OS=$(shell uname -s)
+ifeq ($(OS),Linux)
 	LDLIBS=-llcthw -lbsd -L./build -lm
 endif
 

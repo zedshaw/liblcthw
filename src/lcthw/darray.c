@@ -60,7 +60,7 @@ int DArray_expand(DArray * array)
             "Failed to expand array to new size: %d",
             array->max + (int)array->expand_rate);
 
-    memset(array->contents + old_max, 0, array->expand_rate + 1);
+    memset(array->contents + old_max, 0, array->expand_rate * sizeof(void *));
     return 0;
 
 error:

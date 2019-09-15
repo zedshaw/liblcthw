@@ -122,7 +122,7 @@ char *test_fuzzing()
     srand((unsigned int)time(NULL));
 
     for (i = 0; i < 100; i++) {
-        int num = rand();
+        int num = rand() % 50;
         numbers[i] = bformat("%d", num);
         data[i] = bformat("data %d", num);
         BSTree_set(store, numbers[i], data[i]);

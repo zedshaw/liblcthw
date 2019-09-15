@@ -149,7 +149,7 @@ int BSTree_traverse(BSTree * map, BSTree_traverse_cb traverse_cb)
     return 0;
 }
 
-static inline BSTreeNode *BSTree_find_min(BSTreeNode * node)
+static inline BSTreeNode *BSTree_find_max(BSTreeNode * node)
 {
     while (node->left) {
         node = node->left;
@@ -212,7 +212,7 @@ static inline BSTreeNode *BSTree_node_delete(BSTree * map,
     } else {
         if (node->left && node->right) {
             // swap this node for the smallest node that is bigger than us
-            BSTreeNode *successor = BSTree_find_min(node->right);
+            BSTreeNode *successor = BSTree_find_max(node->right);
             BSTree_swap(successor, node);
 
             // this leaves the old successor with possibly a right child

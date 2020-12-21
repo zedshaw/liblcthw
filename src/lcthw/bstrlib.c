@@ -905,7 +905,7 @@ int bstrcmp (const_bstring b0, const_bstring b1) {
  *  Compare the string b0 and b1 for at most n characters.  If there is an 
  *  error, SHRT_MIN is returned, otherwise a value is returned as if b0 and 
  *  b1 were first truncated to at most n characters then bstrcmp was called
- *  with these new strings are paremeters.  If the length of the strings are 
+ *  with these new strings are parameters.  If the length of the strings are 
  *  different, this function is O(n).  Like its standard C library counter 
  *  part strcmp, the comparison does not proceed past any '\0' termination 
  *  characters encountered.

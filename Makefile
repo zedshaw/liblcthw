@@ -8,6 +8,7 @@ OBJECTS=$(patsubst %.c,%.o,$(SOURCES))
 
 TEST_SRC=$(wildcard tests/*_tests.c tests/leetcode/*_tests.c)
 TESTS=$(patsubst %.c,%,$(TEST_SRC))
+TESTAREA=lcthw
 TESTSUIT=all
 
 TARGET=build/liblcthw.a
@@ -34,8 +35,8 @@ build:
 
 cleanobj:
 	@echo clean test object and bin
-	@rm -rf src/$(TESTAREA)/$(TESTSUIT).o 
-	@rm -rf tests/$(TESTAREA)/$(TESTSUIT)_tests
+	@if [[ "$(TESTSUIT)" != "all" ]];then rm -rf src/$(TESTAREA)/$(TESTSUIT).o;fi
+	@if [[ "$(TESTSUIT)" != "all" ]];then rm -rf tests/$(TESTAREA)/$(TESTSUIT)_tests;fi
 	
 
 # The Unit Tests

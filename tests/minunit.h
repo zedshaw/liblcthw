@@ -177,6 +177,8 @@ __attribute((destructor)) void mutestcases_destroy()
     }
     return;
 };
-    // __END__
 
+// __END__
+
+// ...
 #endif

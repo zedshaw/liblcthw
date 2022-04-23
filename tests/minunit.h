@@ -22,6 +22,49 @@
     }
 /* __END__ */
 
+/* __ADD__ */
+#define _mu_assert_fail_msg(actual, expected) \
+    fprintf(stderr,                           \
+        "\033[41;1m[FAIL]\033[0m");           \
+    log_err("actual:" #actual,                \
+        "expected:" #expected);
+
+#define _mu_assert_pass_msg() \
+    fprintf(stderr,           \
+        "\033[32;1m[PASS]\n\033[0m");
+
+#define mu_assert_eq(actual, expected)        \
+    if (!(actual == expected)) {              \
+        _mu_assert_fail_msg(actual, expected) \
+    } else {                                  \
+        _mu_assert_pass_msg()                 \
+    }
+
+#define mu_assert_not_eq(actual, expected)    \
+    if (actual == expected) {                 \
+        _mu_assert_fail_msg(actual, expected) \
+    } else {                                  \
+        _mu_assert_pass_msg()                 \
+    }
+
+#define mu_assert_str_eq(actual, expected)    \
+    if (strcmp((const char*)(actual),         \
+            (const char*)(expected))) {       \
+        _mu_assert_fail_msg(actual, expected) \
+    } else {                                  \
+        _mu_assert_pass_msg()                 \
+    }
+
+#define mu_assert_str_not_eq(actual, expected) \
+    if (!strcmp((const char*)(actual),         \
+            (const char*)(expected))) {        \
+                                               \
+        _mu_assert_fail_msg(actual, expected)  \
+    } else {                                   \
+        _mu_assert_pass_msg()                  \
+    }
+/* __END__ */
+
 #define mu_run_test(test)          \
     debug("\n-----%s", " " #test); \
     message = test();              \

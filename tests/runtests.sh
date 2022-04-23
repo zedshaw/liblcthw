@@ -5,10 +5,15 @@ echo "Running unit tests:"
 testsuit="*"
 testpath=tests/${testsuit}_tests
 
-if [[ $# == 2 && "$2" != "all" ]];then
-    project=$1
+
+if [[ $# == 2 && "$1" == "lcthw" && "$2" != "all" ]];then
+    #eg: make TESTAREA=lcthw TESTSUIT=darray
     testsuit=$2
-    testpath=tests/${project}/${testsuit}_tests
+    testpath=tests/${testsuit}_tests
+elif [[ $# == 2 && "$1" == "leetcode" && "$2" != "all" ]];then
+    #eg: make TESTAREA=lcthw TESTSUIT=darray
+    testsuit=$2
+    testpath=tests/leetcode/${testsuit}_tests
 fi
 
 for i in ${testpath}

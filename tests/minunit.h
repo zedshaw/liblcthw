@@ -6,6 +6,8 @@
 
 #include <stdlib.h>
 
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#pragma GCC diagnostic ignored "-Wformat-extra-args"
 #define mu_suite_start() char* message = NULL
 
 #define mu_assert(test, message)          \
@@ -82,6 +84,9 @@
 #define RUN_TESTS(name)                         \
     int main(int argc, char* argv[])            \
     {                                           \
+        if (argc < 1) {                         \
+            return -1;                          \
+        }                                       \
         debug("----- RUNNING: %s", argv[0]);    \
         printf("----\nRUNNING: %s\n", argv[0]); \
         char* result = name();                  \

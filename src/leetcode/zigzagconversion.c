@@ -81,7 +81,7 @@ char* convert(char* s, int numRows)
                 }
                 DArray_push(temp, temp_list);
             }
-            List_push(temp_list, s[i]); //按余数正序保存
+            List_push(temp_list, &s[i]); //按余数正序保存
         }
         if (ans % 2 != 0) { //结果为奇数
             List* temp_list = (List*)DArray_get(temp, numRows - remain - 1);
@@ -92,7 +92,7 @@ char* convert(char* s, int numRows)
                 }
                 DArray_push(temp, temp_list);
             }
-            List_push(temp_list, s[i]); //按余数倒序保存
+            List_push(temp_list, &s[i]); //按余数倒序保存
         }
     }
 
@@ -117,10 +117,17 @@ char* convert(char* s, int numRows)
     ListNode* node = res_list->first;
     int m = 0;
     while (node != NULL) {
-        res[m] = node->value;
+        res[m] = *(char*)node->value;
         node = node->next;
         m++;
     }
+
+    List_destroy(res_list);
+    DArray_destroy(temp);
+
+    //#undef NDEBUG
+    debug("=============debug test (%s) =============", "Hello World1");
+    log_info("=============log_info test (%s) =============", "Hello World2");
 
     return res;
 }

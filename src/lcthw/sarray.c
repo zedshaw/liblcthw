@@ -1,16 +1,15 @@
 #undef NDEBUG
-#include <lcthw/sarray.h>
 #include <lcthw/dbg.h>
+#include <lcthw/sarray.h>
 #include <stdlib.h>
 
-
-int SuffixArray_compare(void *thunk, const void *a, const void *b)
+int SuffixArray_compare(void* thunk, const void* a, const void* b)
 {
-    SuffixArray *sarry = thunk;
-    int a_at = *(int *)a;
-    int b_at = *(int *)b;
-    char *a_str = sarry->source + a_at;
-    char *b_str = sarry->source + b_at;
+    SuffixArray* sarry = thunk;
+    int a_at = *(int*)a;
+    int b_at = *(int*)b;
+    char* a_str = sarry->source + a_at;
+    char* b_str = sarry->source + b_at;
 
     int a_len = sarry->length - a_at;
     int b_len = sarry->length - b_at;
@@ -21,7 +20,7 @@ int SuffixArray_compare(void *thunk, const void *a, const void *b)
     return cmp;
 }
 
-int SuffixArray_find_suffix(SuffixArray *sarry, char *data, int length)
+int SuffixArray_find_suffix(SuffixArray* sarry, char* data, int length)
 {
     int min = 0;
     int max = sarry->length;
@@ -33,24 +32,23 @@ int SuffixArray_find_suffix(SuffixArray *sarry, char *data, int length)
         // BUG: wrong, need to use the minimum length
         cmp = strncmp(SuffixArray_substr(sarry, mid), data, length);
 
-        if(cmp < 0) {
+        if (cmp < 0) {
             min = mid + 1;
         } else {
             max = mid - 1;
         }
-    } while(cmp != 0 && min < max);
+    } while (cmp != 0 && min < max);
 
-    if(cmp == 0) {
+    if (cmp == 0) {
         return mid;
     } else {
         return -1;
     }
 }
 
-
-SuffixArray *SuffixArray_create(char *data, int length)
+SuffixArray* SuffixArray_create(char* data, int length)
 {
-    SuffixArray *sarry = calloc(1, sizeof(SuffixArray));
+    SuffixArray* sarry = calloc(1, sizeof(SuffixArray));
     check_mem(sarry);
 
     sarry->source = malloc(length + 1);
@@ -64,29 +62,28 @@ SuffixArray *SuffixArray_create(char *data, int length)
     check_mem(sarry->indices);
 
     int i = 0;
-    for(i = 0; i < length; i++) {
+    for (i = 0; i < length; i++) {
         sarry->indices[i] = i;
     }
 
+#pragma GCC diagnostic ignored "-Wimplicit-function-declaration"
     qsort_r(sarry->indices, length, sizeof(int), sarry, SuffixArray_compare);
 
     return sarry;
 
 error:
-    if(sarry) {
+    if (sarry) {
         SuffixArray_destroy(sarry);
     }
 
     return NULL;
 }
 
-
-void SuffixArray_destroy(SuffixArray *sarry)
+void SuffixArray_destroy(SuffixArray* sarry)
 {
-    if(sarry) {
+    if (sarry) {
         free(sarry->source);
         free(sarry->indices);
         free(sarry);
     }
 }
-

@@ -125,7 +125,8 @@ char* convert(char* s, int numRows)
     return res;
 }
 
-//refer: https://blog.csdn.net/qq_38537503/article/details/95031638
+// refer:
+// https://blog.csdn.net/qq_38537503/article/details/95031638
 // vector<string> temp(numRows);
 // string res;
 // if (s.empty() || numRows < 1)

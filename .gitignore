@@ -4,4 +4,4 @@
 tests/*_tests
 tests/*.log
 build
-tests/leetcode/romantransfer_tests
+tests/leetcode/*_tests

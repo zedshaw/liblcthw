@@ -3,7 +3,7 @@
 
 // Just Do It for new suit
 // the testcase corresponding C algo file
-#include <leetcode/covertz.c>
+#include <leetcode/zigzagconversion.c>
 
 MU_TEST(convert_PAYPALISHIRING)
 {
@@ -13,6 +13,6 @@ MU_TEST(convert_PAYPALISHIRING)
 }
 
 // Just Do It for new suit
-//# make clean;make TESTAREA=leetcode TESTSUIT=covertz
+//# make clean;make TESTAREA=leetcode TESTSUIT=zigzagconversion
 //# make clean;make TESTAREA=leetcode TESTSUIT="\*"
 RUN_TESTS_EX()

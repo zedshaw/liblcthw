@@ -24,7 +24,7 @@ dev: CFLAGS=-g -Wall -Isrc -Wall -Wextra $(OPTFLAGS)
 dev: all
 
 $(TARGET): CFLAGS += -fPIC
-$(TARGET): build $(OBJECTS)
+$(TARGET): build cleanobj $(OBJECTS)
 	ar rcs $@ $(OBJECTS)
 	ranlib $@
 
@@ -32,12 +32,18 @@ build:
 	@mkdir -p build
 	@mkdir -p bin
 
+cleanobj:
+	@echo clean test object and bin
+	@rm -rf src/$(TESTAREA)/$(TESTSUIT).o 
+	@rm -rf tests/$(TESTAREA)/$(TESTSUIT)_tests
+	
+
 # The Unit Tests
 # eg: make TESTAREA=leetcode TESTSUIT=romantransfer
 .PHONY: tests
 tests: LDLIBS += $(TARGET)
 tests: $(TESTS)
-	sh ./tests/runtests.sh ${TESTAREA} $(TESTSUIT)
+	sh ./tests/runtests.sh $(TESTAREA) $(TESTSUIT)
 
 valgrind:
 	VALGRIND="valgrind --log-file=/tmp/valgrind-%p.log" $(MAKE)

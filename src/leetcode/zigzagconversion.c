@@ -128,6 +128,8 @@ char* convert(char* s, int numRows)
     //#undef NDEBUG
     debug("=============debug test (%s) =============", "Hello World1");
     log_info("=============log_info test (%s) =============", "Hello World2");
+    log_info("=============log_info test (%s) =============", "Hello World3");
+    log_info("=============log_info test (%s) =============", "Hello World4");
 
     return res;
 }

@@ -10,4 +10,5 @@ This code is usually in sync with the book, but sometimes it gets out of sync du
 
 2) 
 learn c the hard way with mini unit test your leetcode
-- eg:make clean;make TESTAREA=leetcode TESTSUIT=romantransfer
+
+https://github.com/hamwastp/liblcthw-with-mutest-leetcode/blob/master/tests/leetcode/README.md

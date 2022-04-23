@@ -1,17 +1,19 @@
-CFLAGS=-g -O2 -Wall -Wextra -Isrc -rdynamic -DNDEBUG $(OPTFLAGS)
+CC=gcc
+CFLAGS=-g -std=c99 -O0 -Wall -Wextra -Isrc -rdynamic -DNDEBUG $(OPTFLAGS)
 LDFLAGS=$(OPTLIBS)
 PREFIX?=/usr/local
 
 SOURCES=$(wildcard src/**/*.c src/*.c)
 OBJECTS=$(patsubst %.c,%.o,$(SOURCES))
 
-TEST_SRC=$(wildcard tests/*_tests.c)
+TEST_SRC=$(wildcard tests/*_tests.c tests/leetcode/*_tests.c)
 TESTS=$(patsubst %.c,%,$(TEST_SRC))
+TESTSUIT=all
 
 TARGET=build/liblcthw.a
 
 OS=$(shell lsb_release -si)
-ifeq ($(OS),Ubuntu)
+ifeq ($(OS),CentOS)
 	LDLIBS=-llcthw -lbsd -L./build -lm
 endif
 
@@ -31,10 +33,11 @@ build:
 	@mkdir -p bin
 
 # The Unit Tests
+# eg: make TESTAREA=leetcode TESTSUIT=romantransfer
 .PHONY: tests
 tests: LDLIBS += $(TARGET)
 tests: $(TESTS)
-	sh ./tests/runtests.sh
+	sh ./tests/runtests.sh ${TESTAREA} $(TESTSUIT)
 
 valgrind:
 	VALGRIND="valgrind --log-file=/tmp/valgrind-%p.log" $(MAKE)

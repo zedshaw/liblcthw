@@ -37,65 +37,112 @@ P     I
 s 由英文字母（小写和大写）、',' 和 '.' 组成
 1 <= numRows <= 1000
 */
+#include <lcthw/darray.h>
+#include <lcthw/list.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+// https://blog.csdn.net/qq_38537503/article/details/95031638
+// vector<string> temp(numRows);
+// string res;
+// if (s.empty() || numRows < 1)
+//     return res;
+// if (numRows == 1)
+//     return s;
+// for (int i = 0; i < s.size(); i++) {
+//     int ans = i / (numRows - 1);
+//     int remain = i % (numRows - 1);
+//     if (ans % 2 == 0) { //结果为偶数或0
+//         temp[remain].push_back(s[i]); //按余数正序保存
+//     }
+//     if (ans % 2 != 0) { //结果为奇数
+//         temp[numRows - remain - 1].push_back(s[i]); //按余数倒序保存
+//     }
+// }
+// for (int i = 0; i < temp.size(); i++) {
+//     res += temp[i];
+// }
+// return res;
+
 char* convert(char* s, int numRows)
 {
+    DArray* temp;
+    int size;
+    List* res_list;
+    char* res;
+
     if (s == NULL) {
         return NULL;
     }
 
-    char* result = NULL;
-    size_t len = strlen(s); // 14
-    int nLines = (len / numRows - 1) * (numRows - 1) + 1; // (14 / 3)
+    size = strlen(s);
 
-    result = (char*)malloc(len + 1);
-    if (result == NULL) {
-        return NULL;
-    }
-    memset(result, '\0', len + 1);
-
-    char** p = (char**)malloc(sizeof(char*) * numRows);
-    if (p == NULL) {
-        free(result);
+    if (size == 0 || numRows < 1) {
         return NULL;
     }
 
-    for (int i = 0; i < numRows; i++) {
-        int num = sizeof(char) * (nLines);
-        p[i] = (char*)malloc(num);
-        if (p[i] == NULL) {
-            return NULL;
-        }
-        memset(p, '\0', num);
+    if (numRows == 1) {
+        return s;
     }
 
-    for (int i = 0; i < len; i++) {
-        for (int m = 0; m < nLines; m++) {
-            for (int j = 0; j < numRows; j++) // j = 0
-            {
-                if (j / numRows == 0) // 0
-                {
-                    p[j][m] = s[i]; // j = 0; m = 0; j = 0; m = 1
-                } else if (j > numRows && j / numRows == 1) {
-                    p[numRows - m - 1][j] = s[i];
+    temp = DArray_create(sizeof(List*), numRows);
+    if (temp == NULL) {
+        return NULL;
+    }
+
+    for (int i = 0; i < size; i++) {
+        int ans = i / (numRows - 1);
+        int remain = i % (numRows - 1);
+        if (ans % 2 == 0) { //结果为偶数或0
+            List* temp_list = (List*)DArray_get(temp, remain);
+            if (temp_list == NULL) {
+                temp_list = List_create();
+                if (temp_list == NULL) {
+                    return NULL;
                 }
+                DArray_push(temp, temp_list);
             }
+            List_push(temp_list, s[i]); //按余数正序保存
+        }
+        if (ans % 2 != 0) { //结果为奇数
+            List* temp_list = (List*)DArray_get(temp, numRows - remain - 1);
+            if (temp_list == NULL) {
+                temp_list = List_create();
+                if (temp_list == NULL) {
+                    return NULL;
+                }
+                DArray_push(temp, temp_list);
+            }
+            List_push(temp_list, s[i]); //按余数倒序保存
         }
     }
 
-    // output
-    int n = 0;
-    for (int m = 0; m < numRows; m++) {
-        for (int i = 0; i < len / numRows + 1; i++) {
-            if (p[m][i] != '\0') {
-                result[n] = p[m][i];
-                n++;
-            }
+    res_list = List_create();
+    if (res_list == NULL) {
+        return NULL;
+    }
+    for (int i = 0; i < numRows; i++) {
+        List* temp_list = (List*)DArray_get(temp, i);
+        ListNode* node = temp_list->first;
+        while (node != NULL) {
+            List_push(res_list, node->value);
+            node = node->next;
         }
     }
 
-    return result;
+    res = (char*)malloc(sizeof(char) * List_count(res_list));
+    if (res == NULL) {
+        return NULL;
+    }
+
+    ListNode* node = res_list->first;
+    int m = 0;
+    while (node != NULL) {
+        res[m] = node->value;
+        node = node->next;
+        m++;
+    }
+
+    return res;
 }

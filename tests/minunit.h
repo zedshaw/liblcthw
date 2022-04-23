@@ -141,15 +141,14 @@ void register_testcase(testcase_func f, const char* name);
 void register_testcase(testcase_func f, const char* name)
 {
     if (mu_alltest == NULL) {
-        mu_alltest = (MU_TestInfo*)malloc(sizeof(MU_TestInfo*));
+        mu_alltest = (MU_TestInfo*)malloc(sizeof(MU_TestInfo));
         if (mu_alltest == NULL) {
             return;
         }
 
         mu_alltest_list = mu_alltest;
     } else {
-
-        mu_alltest->next = (MU_TestInfo*)malloc(sizeof(MU_TestInfo*));
+        mu_alltest->next = (MU_TestInfo*)malloc(sizeof(MU_TestInfo));
         if (mu_alltest->next == NULL) {
             return;
         }
@@ -172,8 +171,9 @@ __attribute((destructor)) void mutestcases_destroy()
 {
     MU_TestInfo* p_mu_alltest = mu_alltest_list;
     while (p_mu_alltest != NULL) {
-        free(p_mu_alltest);
+        MU_TestInfo* prev = p_mu_alltest;
         p_mu_alltest = p_mu_alltest->next;
+        free(prev);
     }
     return;
 };

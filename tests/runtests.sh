@@ -1,6 +1,22 @@
 echo "Running unit tests:"
 
-for i in tests/*_tests
+
+#eg: sh  ./tests/runtests.sh leetcode romantransfer
+testsuit="*"
+testpath=tests/${testsuit}_tests
+
+
+if [[ $# == 2 && "$1" == "lcthw" && "$2" != "all" ]];then
+    #eg: make TESTAREA=lcthw TESTSUIT=darray
+    testsuit=$2
+    testpath=tests/${testsuit}_tests
+elif [[ $# == 2 && "$1" == "leetcode" && "$2" != "all" ]];then
+    #eg: make TESTAREA=lcthw TESTSUIT=darray
+    testsuit=$2
+    testpath=tests/leetcode/${testsuit}_tests
+fi
+
+for i in ${testpath}
 do
     $i 2>&1 >> tests/tests.log
     if [ ! $? ]

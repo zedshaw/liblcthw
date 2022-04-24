@@ -1,16 +1,16 @@
 #include "minunit.h"
-#include <lcthw/string_algos.h>
 #include <lcthw/bstrlib.h>
+#include <lcthw/string_algos.h>
 #include <time.h>
 
 struct tagbstring IN_STR = bsStatic(
-        "I have ALPHA beta ALPHA and oranges ALPHA");
+    "I have ALPHA beta ALPHA and oranges ALPHA");
 struct tagbstring ALPHA = bsStatic("ALPHA");
 const int TEST_TIME = 1;
 
-char *test_find_and_scan()
+char* test_find_and_scan()
 {
-    StringScanner *scan = StringScanner_create(&IN_STR);
+    StringScanner* scan = StringScanner_create(&IN_STR);
     mu_assert(scan != NULL, "Failed to make the scanner.");
 
     int find_i = String_find(&IN_STR, &ALPHA);
@@ -22,21 +22,21 @@ char *test_find_and_scan()
 
     scan_i = StringScanner_scan(scan, &ALPHA);
     mu_assert(scan_i > find_i,
-            "should find another ALPHA after the first");
+        "should find another ALPHA after the first");
 
     scan_i = StringScanner_scan(scan, &ALPHA);
     mu_assert(scan_i > find_i,
-            "should find another ALPHA after the first");
+        "should find another ALPHA after the first");
 
     mu_assert(StringScanner_scan(scan, &ALPHA) == -1,
-            "shouldn't find it");
+        "shouldn't find it");
 
     StringScanner_destroy(scan);
 
     return NULL;
 }
 
-char *test_binstr_performance()
+char* test_binstr_performance()
 {
     int i = 0;
     int found_at = 0;
@@ -55,21 +55,20 @@ char *test_binstr_performance()
     } while (elapsed <= TEST_TIME);
 
     debug("BINSTR COUNT: %lu, END TIME: %d, OPS: %f",
-            find_count, (int)elapsed, (double)find_count / elapsed);
+        find_count, (int)elapsed, (double)find_count / elapsed);
     return NULL;
 }
 
-char *test_find_performance()
+char* test_find_performance()
 {
     int i = 0;
-    int found_at = 0;
     unsigned long find_count = 0;
     time_t elapsed = 0;
     time_t start = time(NULL);
 
     do {
         for (i = 0; i < 1000; i++) {
-            found_at = String_find(&IN_STR, &ALPHA);
+            String_find(&IN_STR, &ALPHA);
             find_count++;
         }
 
@@ -77,18 +76,18 @@ char *test_find_performance()
     } while (elapsed <= TEST_TIME);
 
     debug("FIND COUNT: %lu, END TIME: %d, OPS: %f",
-            find_count, (int)elapsed, (double)find_count / elapsed);
+        find_count, (int)elapsed, (double)find_count / elapsed);
 
     return NULL;
 }
 
-char *test_scan_performance()
+char* test_scan_performance()
 {
     int i = 0;
     int found_at = 0;
     unsigned long find_count = 0;
     time_t elapsed = 0;
-    StringScanner *scan = StringScanner_create(&IN_STR);
+    StringScanner* scan = StringScanner_create(&IN_STR);
 
     time_t start = time(NULL);
 
@@ -106,14 +105,14 @@ char *test_scan_performance()
     } while (elapsed <= TEST_TIME);
 
     debug("SCAN COUNT: %lu, END TIME: %d, OPS: %f",
-            find_count, (int)elapsed, (double)find_count / elapsed);
+        find_count, (int)elapsed, (double)find_count / elapsed);
 
     StringScanner_destroy(scan);
 
     return NULL;
 }
 
-char *all_tests()
+char* all_tests()
 {
     mu_suite_start();
 

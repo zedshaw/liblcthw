@@ -26,7 +26,7 @@ void List_destroy(List * list)
 void List_clear(List * list)
 {
     LIST_FOREACH(list, first, next, cur) {
-        free(cur->value);
+        free(cur);
     }
 }
 

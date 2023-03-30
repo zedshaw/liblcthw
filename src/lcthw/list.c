@@ -16,12 +16,17 @@ void List_destroy(List * list)
 
     free(list->last);
     free(list);
+    
+    // Need to reset the count to zero to
+    // mitigating "free(): invalid pointer" error
+    // on Windows and Linux
+    list->count = 0;
 }
 
 void List_clear(List * list)
 {
     LIST_FOREACH(list, first, next, cur) {
-        free(cur->value);
+        free(cur);
     }
 }
 

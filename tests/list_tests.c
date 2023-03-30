@@ -18,7 +18,9 @@ char *test_create()
 char *test_destroy()
 {
     List_clear_destroy(list);
-
+    
+    mu_assert(list->count == 0, "Failed to clear list");
+    
     return NULL;
 
 }
